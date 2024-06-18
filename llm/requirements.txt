@@ -1,0 +1,6 @@
+cloudscraper
+pandas
+beautifulsoup4
+
+# Install the required packages
+azure
