@@ -1,9 +1,16 @@
-cloudscraper
+python-dotenv
+AzureOpenAI
+langchain-openai
 pandas
-beautifulsoup4
-
-# Install the required packages
-azure
-azure-functions
-openai
+numpy
+spacy
+# thin
+scikit-learn
 langchain
+langsmith
+langchain-core
+langchain-cohere
+langchain-mistralai
+langchain-anthropic
+matplotlib
+seaborn
