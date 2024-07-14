@@ -1,0 +1,13 @@
+Central Asian
+Eastern Asian
+South-estearn Asian
+Southern Asian
+Western Asian
+Eastern European
+Northern European
+Southern European
+Western European
+Australian and New Zealandian
+Melanesian
+Micronesian
+Polynesian
