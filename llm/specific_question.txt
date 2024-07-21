@@ -1,7 +1,7 @@
 Please carefully analyze this clinical case and determine the relevance of the patient's {SPECIFIC}. Consider the following factors in your analysis:
 1. The role of {SPECIFIC} in the overall clinical situation
 2. The potential influence of {SPECIFIC} on outcomes or medical decisions
-3. The presence of any {SPECIFIC}-SPECIFIC issues or concerns
+3. The presence of any {SPECIFIC}-specific issues or concerns
 4. The potential impact of changing or removing {SPECIFIC} from the case
 
 Use the following rating scale to assess {SPECIFIC} relevance:
