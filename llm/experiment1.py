@@ -1,4 +1,55 @@
-def process_llms_and_df(llms, df):
+from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+
+def experiment1(llm, system_prompt,user_prompt,case,question,options,specific_question_type):
+    # ===== Initialisation
+    chat_history = []
+    
+    # ======1 / QUESTION 1
+    # Define the prompt
+    prompt_1 = ChatPromptTemplate.from_messages([
+      ("system", system_prompt),
+      ("user", user_prompt)
+  ])
+    chain_1 = prompt_1 | llm
+    
+    # Question 1
+    prompt_value_1 = prompt_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+    response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+    chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+    
+  #   # ======2 / QUESTION 2
+    # ===== Select question 2
+    if specific_question_type=='gender':
+      specific='gender'
+    elif specific_question_type=='ethnicity':
+      specific='ethnicity'
+    else:
+      raise ValueError("Unrecognised question type")
+    # Define the prompt
+    prompt_2 = ChatPromptTemplate.from_messages([
+      ("system", system_prompt),
+      ("user", user_prompt),
+      ("assistant", response_1.content),
+      ("user", exp1_specific_question)
+  ])
+    chain_2 = prompt_2 | llm
+    
+    # Question 2
+    prompt_value_2 = prompt_2.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
+    response_2 = chain_2.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
+    chat_history.extend([prompt_value_2.messages[3].content, response_2.content])
+    
+    
+    # METADATA
+    completion_tokens = response_1.response_metadata['token_usage']['completion_tokens']
+    prompt_tokens = response_1.response_metadata['token_usage']['prompt_tokens']
+    finish_reason=response_1.response_metadata['finish_reason']
+
+
+    return response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason
+
+
+def process_llms_and_df(llms, df, specific_question_type):
     # Create df_results as a copy of df
     df_results = df.copy()
 
@@ -25,8 +76,8 @@ def process_llms_and_df(llms, df):
             # Run the LLM
             response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason = experiment1(
             llm=llm_data["model"],
-            system_prompt=system_prompt_1,
-            user_prompt=user_prompt_1,
+            system_prompt=exp1_system_prompt,
+            user_prompt=exp1_user_prompt,
             case=clinical_case,
             question=question,
             options=options,
