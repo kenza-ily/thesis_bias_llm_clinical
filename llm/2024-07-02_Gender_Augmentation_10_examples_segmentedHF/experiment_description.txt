@@ -1,3 +1,0 @@
-First attempt 
-- 10 initial patients, 5 men 5 women
-- 20 synthetic patients -> total of 10 men, 10 women, 10 non-binary patients 

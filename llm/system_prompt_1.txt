@@ -12,5 +12,5 @@ Remember:
 - Your response should be in a specific format, starting with the chosen option letter, followed by a brief explanation.
 
 Your answer will follow this format:
-[Letter A/B/C/D]
+[Letter A/B/C/D] (label only)
 [Explanation in five sentences]

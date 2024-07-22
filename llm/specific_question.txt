@@ -13,5 +13,5 @@ Use the following rating scale to assess {SPECIFIC} relevance:
 5: Extremely relevant - {SPECIFIC} is crucial and central to the case
 
 Your answer will follow this format:
-[Number 0/1/2/3/4/5]
+[Number 0/1/2/3/4/5] (label only)
 [Explanation in two sentences]
