@@ -1,3 +1,19 @@
 cloudscraper
 pandas
 beautifulsoup4
+python-dotenv
+AzureOpenAI
+langchain-openai
+pandas
+numpy
+spacy
+# thin
+scikit-learn
+langchain
+langsmith
+langchain-core
+langchain-cohere
+langchain-mistralai
+langchain-anthropic
+matplotlib
+seaborn
