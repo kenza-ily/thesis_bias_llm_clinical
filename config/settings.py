@@ -1,14 +1,14 @@
-import os
 from dotenv import load_dotenv
+import os
 
-load_dotenv()  # Load environment variables from .env file
+# Keys 
+load_dotenv()
 
-# Global settings
-TEMPERATURE = 0
-
-# API keys and versions
 AZURE_OPENAI_API_KEY = os.getenv('AZURE_OPENAI_API_KEY')
+AZURE_OPENAI_ENDPOINT = os.getenv('AZURE_OPENAI_ENDPOINT')
 AZURE_OPENAI_API_VERSION = os.getenv('AZURE_OPENAI_API_VERSION')
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3 = os.getenv('AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3')
+HUGGINGFACEHUB_API_TOKEN = os.getenv('HF_USERTOKEN')
 
-# Add other global settings as needed
+# LLM hyperparameters
+TEMPERATURE = 0

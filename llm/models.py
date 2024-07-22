@@ -1,4 +1,4 @@
-from langchain.chat_models import AzureChatOpenAI
+from langchain_openai import AzureChatOpenAI
 from config.settings import AZURE_OPENAI_API_VERSION, AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3, TEMPERATURE
 
 def get_gpt3_model():
@@ -7,5 +7,3 @@ def get_gpt3_model():
         azure_deployment=AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3,
         temperature=TEMPERATURE
     )
-
-# Add other model initialization functions here
