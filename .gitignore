@@ -7,3 +7,4 @@ llm/keys.env
 orga/CS Thesis Marking Sceme 1516.pdf
 /aob
 *.csv
+data/eda.ipynb
