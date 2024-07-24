@@ -1,20 +1,32 @@
+# basics
 cloudscraper
 pandas
 beautifulsoup4
 python-dotenv
 AzureOpenAI
 langchain-openai
-pandas
 numpy
 spacy
-# thin
+matplotlib
+seaborn
 scikit-learn
+datetime
+
+# LLM
 langchain
 langsmith
 langchain-core
 langchain-cohere
 langchain-mistralai
 langchain-anthropic
-matplotlib
-seaborn
-dotenv
+langchain-huggingface
+openai
+
+
+# OTHER
+# For potential future use
+# scipy
+# typing
+
+# Ensure spaCy English model is downloaded
+# Run this after installing requirements: python -m spacy download en_core_web_sm

@@ -7,3 +7,4 @@ def get_gpt3_model():
         azure_deployment=AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3,
         temperature=TEMPERATURE
     )
+    
