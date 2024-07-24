@@ -1,5 +1,4 @@
 import re
-from llm.models import get_gpt3_model
 
 def extract_price(variable_name, costs_content):
     pattern = rf'{variable_name}\s*=\s*(\d+(?:\.\d+)?)/\(1e6\)'
@@ -11,10 +10,9 @@ with open('data/costs.txt', 'r') as file:
 
 llms = {
     "llm_gpt3": {
-        "model": get_gpt3_model(),
         "model_name": "gpt-3.5-turbo",
         "price_per_input_token": extract_price("PRICE_PER_INPUT_TOKEN_GPT3", costs_content),
         "price_per_output_token": extract_price("PRICE_PER_OUTPUT_TOKEN_GPT3", costs_content)
     },
-    # !TODO! Add other LLMs here
+    # Add other LLMs here if needed
 }
