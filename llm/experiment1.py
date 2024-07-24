@@ -1,4 +1,4 @@
-from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+from prompts.experiment1 import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
 
 def experiment1(llm, system_prompt,user_prompt,case,question,options,specific_question_type):
     # ===== Initialisation

@@ -1,84 +1,74 @@
-import os
 import sys
-import pandas as pd
-import logging
-from datetime import datetime
+import os
+
+# Get the absolute path of the current script
+current_script_path = os.path.abspath(__file__)
+
+# Get the root directory of the project (assuming it's two levels up from the script)
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_script_path)))
 
 # Add the project root to the Python path
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.insert(0, project_root)
 
-from config.settings import TEMPERATURE
-from config.llm_config import llms
-from llm.models import get_gpt3_model
-from llm.prompts import load_prompt
-from llm.experiment1 import experiment1
-from llm.utils import extract_price
+print("Current working directory:", os.getcwd())
+print("Contents of current directory:", os.listdir())
+print("Contents of /app directory:", os.listdir('/app'))
+print("Project root:", project_root)
+print("Python path:", sys.path)
 
-# Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# Now try to import the config
+try:
+    from config.llm_config import llms
+    print("Successfully imported llms from config.llm_config")
+except ImportError as e:
+    print(f"Failed to import llms: {e}")
+    print("Contents of config directory:", os.listdir(os.path.join(project_root, 'config')))
 
-def test_llm_loading():
-    logger.info("Testing LLM loading...")
-    try:
-        model = get_gpt3_model()
-        assert model is not None
-        logger.info("LLM loaded successfully.")
-    except Exception as e:
-        logger.error(f"Error loading LLM: {str(e)}")
-        raise
+from llm.experiment1 import process_llms_and_df
+from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+import pandas as pd
+import time
+from datetime import datetime
 
-def test_prompt_loading():
-    logger.info("Testing prompt loading...")
-    try:
-        system_prompt = load_prompt('experiment1', 'system_prompt.txt')
-        user_prompt = load_prompt('experiment1', 'user_prompt.txt')
-        specific_question = load_prompt('experiment1', 'specific_question.txt')
-        assert all([system_prompt, user_prompt, specific_question])
-        logger.info("Prompts loaded successfully.")
-    except Exception as e:
-        logger.error(f"Error loading prompts: {str(e)}")
-        raise
-
-def test_basic_inference():
-    logger.info("Testing basic LLM inference...")
-    try:
-        model = get_gpt3_model()
-        test_input = "What is the capital of France?"
-        response = model.invoke(test_input)
-        assert response is not None and "Paris" in response.content
-        logger.info("Basic inference test passed.")
-    except Exception as e:
-        logger.error(f"Error in basic inference: {str(e)}")
-        raise
-
-def test_experiment1_function():
-    logger.info("Testing experiment1 function...")
-    try:
-        model = get_gpt3_model()
-        test_case = "A 35-year-old patient presents with fever and cough."
-        test_question = "What is the most likely diagnosis?"
-        test_options = "A. Common cold\nB. Influenza\nC. COVID-19\nD. Bacterial pneumonia"
-        response, _, _, _, _, _, _, _ = experiment1(model, "system prompt", "user prompt", test_case, test_question, test_options, "gender")
-        assert response is not None
-        logger.info("experiment1 function test passed.")
-    except Exception as e:
-        logger.error(f"Error in experiment1 function: {str(e)}")
-        raise
-
-def run_all_tests():
-    logger.info("Starting test suite...")
-    try:
-        test_llm_loading()
-        test_prompt_loading()
-        test_basic_inference()
-        test_experiment1_function()
-        logger.info("All tests passed successfully!")
-    except Exception as e:
-        logger.error(f"Test suite failed: {str(e)}")
-    finally:
-        logger.info("Test suite completed.")
+def run_test():
+    # Load the test data
+    data_path = os.path.join(project_root, 'results', 'tests', 'data.csv')
+    if not os.path.exists(data_path):
+        print(f"Data file not found at {data_path}")
+        return
+    df = pd.read_csv(data_path)
+    
+    # Set the specific question type
+    specific_question_type = "gender"  # or "ethnicity"
+    
+    # Get the current timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Process the data with all LLMs
+    start_time = time.time()
+    results_df = process_llms_and_df(llms, df, specific_question_type)
+    end_time = time.time()
+    
+    # Calculate total execution time
+    total_time = end_time - start_time
+    
+    # Save the results in the current directory
+    results_filename = f"results_{timestamp}.csv"
+    results_df.to_csv(results_filename, index=False)
+    
+    # Print summary
+    print(f"\nTest completed in {total_time:.2f} seconds.")
+    print(f"Results saved to: {os.path.abspath(results_filename)}")
+    
+    # Calculate and print accuracy for each LLM
+    for llm_name in llms.keys():
+        accuracy = results_df[f'{llm_name}_performance'].mean() * 100
+        print(f"Accuracy for {llm_name}: {accuracy:.2f}%")
+    
+    # Calculate and print total cost for each LLM
+    for llm_name in llms.keys():
+        total_cost = results_df[f'{llm_name}_total_price'].sum()
+        print(f"Total cost for {llm_name}: ${total_cost:.4f}")
 
 if __name__ == "__main__":
-    run_all_tests()
+    run_test()

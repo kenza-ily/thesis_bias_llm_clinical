@@ -1,6 +1,6 @@
 import pandas as pd
 from llm.utils import get_llms
-from llm.experiment import process_llms_and_df
+from llm.experiment1 import experiment1, process_llms_and_df
 from config.settings import TEMPERATURE
 
 def run_experiment():
