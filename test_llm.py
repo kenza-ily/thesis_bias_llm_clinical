@@ -1,15 +1,12 @@
-from llm.models import get_gpt3_model
-from langchain_core.messages import HumanMessage
+from llm.utils import get_llms
 
-def test_llm():
-    print("Initializing LLM...")
-    llm = get_gpt3_model()
+def main():
+    llms = get_llms()
+    gpt3_model = llms["llm_gpt3"]["model"]
     
-    print("Sending a test message to the LLM...")
-    response = llm.invoke([HumanMessage(content="Hello, can you hear me?")])
-    
-    print("LLM Response:")
+    # Test the model
+    response = gpt3_model.invoke("Hello, how are you?")
     print(response.content)
 
 if __name__ == "__main__":
-    test_llm()
+    main()

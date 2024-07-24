@@ -1,0 +1,11 @@
+# LLM API Costs (in USD per 1 million tokens)
+
+# GPT-3.5 Turbo
+PRICE_PER_INPUT_TOKEN_GPT3 = 0.5/(1e6)
+PRICE_PER_OUTPUT_TOKEN_GPT3 = 1.5/(1e6)
+
+# GPT-4 (for future use)
+PRICE_PER_INPUT_TOKEN_GPT4 = 30/(1e6)
+PRICE_PER_OUTPUT_TOKEN_GPT4 = 60/(1e6)
+
+# Add other model costs as needed
