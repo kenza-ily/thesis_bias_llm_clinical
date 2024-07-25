@@ -1,60 +1,79 @@
-from prompts.experiment1 import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+# ===================================== DEBUG
+import os
+print(f"Importing from {__file__}")
+
+try:
+    from .prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+    print("Successfully imported prompts in experiment1.py")
+except ImportError as e:
+    print(f"Failed to import prompts in experiment1.py: {e}")
+
+
+
+
+
+
+
+# ===================================== EXPERIMENT
+# from prompts.experiment1 import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
 from langchain_core.prompts import ChatPromptTemplate
 
 
 # =========== Heart of the experiment
 def experiment1_llm_pipeline(llm,case,question,options,specific_question_type):
-    # --- 0 / PROMPTS
-    system_prompt = exp1_system_prompt
-    user_prompt = exp1_user_prompt
-    specific_question = exp1_specific_question
-    
-    # --- Initialisation
-    chat_history = []
-    
-    # =============/ QUESTION 1
-    # Define the prompt
-    prompt_1 = ChatPromptTemplate.from_messages([
-      ("system", system_prompt),
-      ("user", user_prompt)
-  ])
-    chain_1 = prompt_1 | llm
-    
-    # Question 1
-    prompt_value_1 = prompt_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
-    response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
-    chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
-    
-  #   # ======2 / QUESTION 2
-    # ===== Select question 2
-    if specific_question_type=='gender':
-      specific='gender'
-    elif specific_question_type=='ethnicity':
-      specific='ethnicity'
-    else:
-      raise ValueError("Unrecognised question type")
-    # Define the prompt
-    prompt_2 = ChatPromptTemplate.from_messages([
-      ("system", system_prompt),
-      ("user", user_prompt),
-      ("assistant", response_1.content),
-      ("user", specific_question)
-  ])
-    chain_2 = prompt_2 | llm
-    
-    # Question 2
-    prompt_value_2 = prompt_2.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
-    response_2 = chain_2.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
-    chat_history.extend([prompt_value_2.messages[3].content, response_2.content])
-    
-    
-    # METADATA
-    completion_tokens = response_1.response_metadata['token_usage']['completion_tokens']
-    prompt_tokens = response_1.response_metadata['token_usage']['prompt_tokens']
-    finish_reason=response_1.response_metadata['finish_reason']
+  if llm is None:
+        raise ValueError("LLM model is None. Please ensure a valid model is provided.")
+  # --- 0 / PROMPTS
+  system_prompt = exp1_system_prompt
+  user_prompt = exp1_user_prompt
+  specific_question = exp1_specific_question
+  
+  # --- Initialisation
+  chat_history = []
+  
+  # =============/ QUESTION 1
+  # Define the prompt
+  prompt_1 = ChatPromptTemplate.from_messages([
+    ("system", system_prompt),
+    ("user", user_prompt)
+])
+  chain_1 = prompt_1 | llm
+  
+  # Question 1
+  prompt_value_1 = prompt_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+  response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+  chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+  
+#   # ======2 / QUESTION 2
+  # ===== Select question 2
+  if specific_question_type=='gender':
+    specific='gender'
+  elif specific_question_type=='ethnicity':
+    specific='ethnicity'
+  else:
+    raise ValueError("Unrecognised question type")
+  # Define the prompt
+  prompt_2 = ChatPromptTemplate.from_messages([
+    ("system", system_prompt),
+    ("user", user_prompt),
+    ("assistant", response_1.content),
+    ("user", specific_question)
+])
+  chain_2 = prompt_2 | llm
+  
+  # Question 2
+  prompt_value_2 = prompt_2.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
+  response_2 = chain_2.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
+  chat_history.extend([prompt_value_2.messages[3].content, response_2.content])
+  
+  
+  # METADATA
+  completion_tokens = response_1.response_metadata['token_usage']['completion_tokens']
+  prompt_tokens = response_1.response_metadata['token_usage']['prompt_tokens']
+  finish_reason=response_1.response_metadata['finish_reason']
 
 
-    return response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason
+  return response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason
 
 
 # =========== Experiment pipeline
@@ -69,10 +88,16 @@ def process_llms_and_df(llms, df, specific_question_type):
     # LLM loop
     for llm_name, llm_data in llms.items():
         print(f"\nProcessing with LLM: {llm_name}")  # Print current LLM being processed
-        
+      
         # Create new columns for this LLM's responses and times
         df_results[f'{llm_name}_response'] = ''
         df_results[f'{llm_name}_time'] = 0.0
+        
+        # Get the LLM model
+        llm_model = llm_data.get("model")
+        if llm_model is None:
+            print(f"Warning: No model found for {llm_name}. Skipping this LLM.")
+            continue
 
         # df loop
         for idx_val, row_val in df_results.iterrows():
@@ -83,13 +108,18 @@ def process_llms_and_df(llms, df, specific_question_type):
             correct_answer=row_val['answer_idx_shuffled']; correct_answer_lower = correct_answer.lower()
 
             # Run the LLM
-            response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason = experiment1_llm_pipeline(
-            llm=llm_data["model"],
-            case=clinical_case,
-            question=question,
-            options=options,
-            specific_question_type=specific_question_type
-        )
+            try:
+              response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason = experiment1_llm_pipeline(
+              llm=llm_model,
+              case=clinical_case,
+              question=question,
+              options=options,
+              specific_question_type=specific_question_type
+          )
+            except KeyError as e:
+              print(f"KeyError in llm_data for {llm_name}: {e}")
+              print(f"Available keys in llm_data: {llm_data.keys()}")
+              continue
             # POSTPROCESSING
             # ---- Prompts
             prompt_value_1_str = f"System_prompt: {prompt_value_1.messages[0].content}\nUser Prompt: {prompt_value_1.messages[1].content}"

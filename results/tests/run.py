@@ -1,5 +1,8 @@
 import sys
 import os
+import traceback
+
+
 
 # Get the absolute path of the current script
 current_script_path = os.path.abspath(__file__)
@@ -8,8 +11,9 @@ current_script_path = os.path.abspath(__file__)
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_script_path)))
 
 # Add the project root to the Python path
-sys.path.insert(0, project_root)
+sys.path.append("../..")
 
+# from ....config.llm_config import llms
 print("Current working directory:", os.getcwd())
 print("Contents of current directory:", os.listdir())
 print("Contents of /app directory:", os.listdir('/app'))
@@ -24,19 +28,15 @@ except ImportError as e:
     print(f"Failed to import llms: {e}")
     print("Contents of config directory:", os.listdir(os.path.join(project_root, 'config')))
 
-# Import pre-loaded prompts
-try:
-    from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
-    print("Successfully imported prompts from llm.prompts")
-except ImportError as e:
-    print(f"Failed to import prompts: {e}")
-
 # Import process_llms_and_df
 try:
     from llm.experiment1 import process_llms_and_df
     print("Successfully imported process_llms_and_df from llm.experiment1")
 except ImportError as e:
     print(f"Failed to import process_llms_and_df: {e}")
+    print("Traceback:")
+    traceback.print_exc()
+    print("Contents of llm directory:", os.listdir(os.path.join(project_root, 'llm')))
 
 import pandas as pd
 import time
