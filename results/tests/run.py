@@ -24,8 +24,20 @@ except ImportError as e:
     print(f"Failed to import llms: {e}")
     print("Contents of config directory:", os.listdir(os.path.join(project_root, 'config')))
 
-from llm.experiment1 import process_llms_and_df
-from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+# Import pre-loaded prompts
+try:
+    from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+    print("Successfully imported prompts from llm.prompts")
+except ImportError as e:
+    print(f"Failed to import prompts: {e}")
+
+# Import process_llms_and_df
+try:
+    from llm.experiment1 import process_llms_and_df
+    print("Successfully imported process_llms_and_df from llm.experiment1")
+except ImportError as e:
+    print(f"Failed to import process_llms_and_df: {e}")
+
 import pandas as pd
 import time
 from datetime import datetime

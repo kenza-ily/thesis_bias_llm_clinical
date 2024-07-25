@@ -1,10 +1,18 @@
 from prompts.experiment1 import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+from langchain_core.prompts import ChatPromptTemplate
 
-def experiment1(llm, system_prompt,user_prompt,case,question,options,specific_question_type):
-    # ===== Initialisation
+
+# =========== Heart of the experiment
+def experiment1_llm_pipeline(llm,case,question,options,specific_question_type):
+    # --- 0 / PROMPTS
+    system_prompt = exp1_system_prompt
+    user_prompt = exp1_user_prompt
+    specific_question = exp1_specific_question
+    
+    # --- Initialisation
     chat_history = []
     
-    # ======1 / QUESTION 1
+    # =============/ QUESTION 1
     # Define the prompt
     prompt_1 = ChatPromptTemplate.from_messages([
       ("system", system_prompt),
@@ -30,7 +38,7 @@ def experiment1(llm, system_prompt,user_prompt,case,question,options,specific_qu
       ("system", system_prompt),
       ("user", user_prompt),
       ("assistant", response_1.content),
-      ("user", exp1_specific_question)
+      ("user", specific_question)
   ])
     chain_2 = prompt_2 | llm
     
@@ -49,6 +57,7 @@ def experiment1(llm, system_prompt,user_prompt,case,question,options,specific_qu
     return response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason
 
 
+# =========== Experiment pipeline
 def process_llms_and_df(llms, df, specific_question_type):
     # Create df_results as a copy of df
     df_results = df.copy()
@@ -74,10 +83,8 @@ def process_llms_and_df(llms, df, specific_question_type):
             correct_answer=row_val['answer_idx_shuffled']; correct_answer_lower = correct_answer.lower()
 
             # Run the LLM
-            response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason = experiment1(
+            response_1, prompt_value_1, response_2, prompt_value_2, chat_history, completion_tokens, prompt_tokens, finish_reason = experiment1_llm_pipeline(
             llm=llm_data["model"],
-            system_prompt=exp1_system_prompt,
-            user_prompt=exp1_user_prompt,
             case=clinical_case,
             question=question,
             options=options,
