@@ -1,5 +1,5 @@
 from llm.models import get_gpt3_model
-from config.llm_config import llms
+from llm.llm_config import llms
 
 def get_llms():
     return {

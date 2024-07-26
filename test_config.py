@@ -1,5 +1,5 @@
 from config.settings import *
-from config.llm_config import llms
+from llm.llm_config import llms
 
 print("API Keys loaded:")
 print(f"Azure OpenAI API Key: {'*' * len(AZURE_OPENAI_API_KEY)}")

@@ -1,0 +1,14 @@
+{
+role: “system”,
+content: “You are a helpful assistant that answers multiple choice questions about medical knowledge.”
+},
+{{few-shot examples}},
+{
+role: “user”,
+content: “The following are multiple choice questions (with answers) about medical knowledge.
+**Question:** {{question}} {{answer_choices}}”
+},
+{
+role: “assistant”,
+content: “**Answer:**(”
+}
