@@ -6,6 +6,5 @@ datasets/mededu_v9i1e47532_app1.docx
 llm/keys.env
 orga/CS Thesis Marking Sceme 1516.pdf
 /aob
-*.csv
-data/eda.ipynb
+data/
 /notebooks
