@@ -27,12 +27,27 @@ def experiment1_llm_pipeline(llm,case,question,options,specific_question_type):
   chain_1 = prompt_1 | llm
   
   # invoke
-  prompt_value_1 = prompt_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
-  start_time_1 = time.time()
-  response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
-  end_time_1 = time.time()
-  running_time_1=end_time_1-start_time_1
-  chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+  try:
+    prompt_value_1 = prompt_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+    start_time_1 = time.time()
+    response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+    end_time_1 = time.time()
+    running_time_1=end_time_1-start_time_1
+    chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+  except ValueError as e: 
+    if "Azure rate limit" in str(e):
+      print("Azure rate limit reached. Waiting for 10 seconds before retrying.")
+      time.sleep(10)
+      response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+      chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+    else:
+      print(f"Unexpected error occurred: {str(e)}")
+      print(f"Question: {question}")
+      running_time_1 = None
+      response_1 = None
+      prompt_value_1 = None
+      chat_history.extend([None, None, None])
+      print("Skipping this question.")
   
   # metadata
   prompt_tokens_1 = response_1.response_metadata['token_usage']['prompt_tokens']
@@ -45,8 +60,6 @@ def experiment1_llm_pipeline(llm,case,question,options,specific_question_type):
     specific='gender'
   elif specific_question_type=='ethnicity':
     specific='ethnicity'
-  elif specific_question_type=='age':
-    specific='age'
   else:
     raise ValueError("Unrecognised question type")
   
@@ -79,7 +92,7 @@ def experiment1_llm_pipeline(llm,case,question,options,specific_question_type):
 
 
 # =========== Experiment pipeline
-def process_llms_and_df(llms, df, specific_question_type):
+def process_llms_and_df(llms, df, specific_question_type,saving_path=None):
     # Create df_results as a copy of df
     df_results = df.copy()
 
@@ -124,7 +137,8 @@ def process_llms_and_df(llms, df, specific_question_type):
               continue
             
             # POSTPROCESSING
-            
+            # specific question
+            df_results.loc[idx_val, f'{llm_name}_specific_question'] = specific_question_type
             # chat history
             chat_history = '\n'.join(chat_history)
             # prompts
@@ -149,8 +163,6 @@ def process_llms_and_df(llms, df, specific_question_type):
             
             
             # ----- Store experiment parameters in df_results
-            # specific question
-            df_results.loc[idx_val, f'{llm_name}_specific_question'] = specific_question_type
             # Prompts
             df_results.loc[idx_val, f'{llm_name}_prompt1'] = prompt_value_1_str
             df_results.loc[idx_val, f'{llm_name}_prompt2'] = prompt_value_2_str
@@ -187,11 +199,17 @@ def process_llms_and_df(llms, df, specific_question_type):
             # Performance
             df_results.loc[idx_val, f'{llm_name}_performance'] = row_performance
             
+            
             # ----- Print progress every 10%
             if (idx_val + 1) % progress_interval == 0:
                 progress_percentage = ((idx_val + 1) / total_rows) * 100
                 print(f"Progress: {progress_percentage:.1f}% complete")
-
+                if saving_path is not None:
+                    df_results.to_csv(saving_path, index=False)
+                
+            
+            print(f"Finished processing with LLM: {llm_name}")  # Print when finished with current LLM
+          
         # You can also keep a running total if needed
         total_performance = df_results[f'{llm_name}_performance'].sum()
         accuracy = total_performance / len(df_results) * 100

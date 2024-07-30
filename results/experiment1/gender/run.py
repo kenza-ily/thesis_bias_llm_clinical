@@ -15,6 +15,9 @@ from llm.experiment1 import process_llms_and_df
 # Hard-coded
 specific_question_type = "gender"
 
+
+llms = dict(list(llms.items())[1:])
+
 def run_experiment1():
     # Define paths
     data_path = os.path.join(project_root, 'results', 'experiment1', 'gender', 'data.csv')

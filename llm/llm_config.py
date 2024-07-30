@@ -1,4 +1,4 @@
-from llm.models import get_gpt3_model
+from llm.models import get_gpt3_model , get_gpt4o_model
 import re
 
 def extract_price(variable_name, costs_content):
@@ -16,5 +16,11 @@ llms = {
         "price_per_input_token": extract_price("PRICE_PER_INPUT_TOKEN_GPT3", costs_content),
         "price_per_output_token": extract_price("PRICE_PER_OUTPUT_TOKEN_GPT3", costs_content)
     },
+    "llm_gpt4o": {
+        "model_name": "gpt-4.0-turbo",
+        "model": get_gpt4o_model(),
+        "price_per_input_token": extract_price("PRICE_PER_INPUT_TOKEN_GPT4o", costs_content),
+        "price_per_output_token": extract_price("PRICE_PER_OUTPUT_TOKEN_GPT4o", costs_content)
+    }
     # Add other LLM configurations here
 }

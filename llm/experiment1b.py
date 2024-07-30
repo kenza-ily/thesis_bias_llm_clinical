@@ -27,17 +27,37 @@ def experiment1_llm_pipeline_b(llm,case,question,options,specific_question_type)
   chain_1 = prompt_1 | llm
   
   # invoke
-  prompt_value_1 = prompt_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
-  start_time_1 = time.time()
-  response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
-  end_time_1 = time.time()
-  running_time_1=end_time_1-start_time_1
-  chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+  try:
+    prompt_value_1 = prompt_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+    start_time_1 = time.time()
+    response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+    end_time_1 = time.time()
+    running_time_1=end_time_1-start_time_1
+    chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+  except ValueError as e:
+    if "rate limit" in str(e):
+      print("Azure rate limit reached. Waiting for 10 seconds before retrying.")
+      time.sleep(10)
+      response_1 = chain_1.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options})
+      chat_history.extend([prompt_value_1.messages[0].content,prompt_value_1.messages[1].content, response_1.content])
+    else:
+      print(f"Unexpected error occurred: {str(e)}")
+      print(f"Question: {question}")
+      running_time_1 = None
+      response_1 = None
+      prompt_value_1 = None
+      chat_history.extend([None, None, None])
+      print("Skipping this question.")
   
   # metadata
-  prompt_tokens_1 = response_1.response_metadata['token_usage']['prompt_tokens']
-  completion_tokens_1 = response_1.response_metadata['token_usage']['completion_tokens']
-  finish_reason_1=response_1.response_metadata['finish_reason']
+  if prompt_value_1 is not None:
+    prompt_tokens_1 = response_1.response_metadata['token_usage']['prompt_tokens']
+    completion_tokens_1 = response_1.response_metadata['token_usage']['completion_tokens']
+    finish_reason_1=response_1.response_metadata['finish_reason']
+  else:
+    prompt_tokens_1 = None
+    completion_tokens_1 = None
+    finish_reason_1 = None
   
   # -------- Q2a
   # question selection
@@ -59,18 +79,42 @@ def experiment1_llm_pipeline_b(llm,case,question,options,specific_question_type)
   chain_2a = prompt_2a | llm
   
   # invoke
-  prompt_value_2a = prompt_2a.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
-  start_time_2a = time.time()
-  response_2a = chain_2a.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
-  end_time_2a=time.time()
-  running_time_2a=end_time_2a-start_time_2a
-  chat_history.extend([prompt_value_2a.messages[3].content, response_2a.content])
+  try:
+    prompt_value_2a = prompt_2a.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
+    start_time_2a = time.time()
+    response_2a = chain_2a.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
+    end_time_2a=time.time()
+    running_time_2a=end_time_2a-start_time_2a
+    chat_history.extend([prompt_value_2a.messages[3].content, response_2a.content])
+  except ValueError as e:
+    if "rate limit" in str(e):
+      print("Azure rate limit reached. Waiting for 10 seconds before retrying.")
+      time.sleep(10)
+      prompt_value_2a = prompt_2a.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
+      start_time_2a = time.time()
+      response_2a = chain_2a.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
+      end_time_2a=time.time()
+      running_time_2a=end_time_2a-start_time_2a
+      chat_history.extend([prompt_value_2a.messages[3].content, response_2a.content])
+    else:
+      print(f"Unexpected error occurred: {str(e)}")
+      print(f"Question: {question}")
+      running_time_2a = None
+      response_2a = None
+      prompt_value_2a = None
+      chat_history.extend([None, None])
+      print("Skipping this question.")
   
   
   # metadata
-  completion_tokens_2a = response_2a.response_metadata['token_usage']['completion_tokens']
-  prompt_tokens_2a = response_2a.response_metadata['token_usage']['prompt_tokens']
-  finish_reason_2a=response_2a.response_metadata['finish_reason']
+  if prompt_value_2a is not None:
+    completion_tokens_2a = response_2a.response_metadata['token_usage']['completion_tokens']
+    prompt_tokens_2a = response_2a.response_metadata['token_usage']['prompt_tokens']
+    finish_reason_2a=response_2a.response_metadata['finish_reason']
+  else:
+    completion_tokens_2a = None
+    prompt_tokens_2a = None
+    finish_reason_2a = None
   
   # -------- Q3 - first one
   # question selection
@@ -92,25 +136,48 @@ def experiment1_llm_pipeline_b(llm,case,question,options,specific_question_type)
   chain_2b = prompt_2b | llm
   
   # invoke
-  prompt_value_2b = prompt_2b.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
-  start_time_2b = time.time()
-  response_2b = chain_2b.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
-  end_time_2b=time.time()
-  running_time_2b=end_time_2b-start_time_2b
-  chat_history.extend([prompt_value_2b.messages[3].content, response_2b.content])
-  
-  
+  try:
+    prompt_value_2b = prompt_2b.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
+    start_time_2b = time.time()
+    response_2b = chain_2b.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
+    end_time_2b=time.time()
+    running_time_2b=end_time_2b-start_time_2b
+    chat_history.extend([prompt_value_2b.messages[3].content, response_2b.content])
+  except ValueError as e:
+    if "rate limit" in str(e):
+      print("Rate limit reached. Waiting for 10 seconds before retrying.")
+      time.sleep(10)
+      prompt_value_2b = prompt_2b.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
+      start_time_2b = time.time()
+      response_2b = chain_2b.invoke({"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})  # Pass chat history to question 2
+      end_time_2b=time.time()
+      running_time_2b=end_time_2b-start_time_2b
+      chat_history.extend([prompt_value_2b.messages[3].content, response_2b.content])
+    else:
+      print(f"Unexpected error occurred: {str(e)}")
+      print(f"Question: {question}")
+      running_time_2b = None
+      response_2b = None
+      prompt_value_2b = None
+      chat_history.extend([None, None])
+      print("Skipping this question.")
+    
   # metadata
-  completion_tokens_2b = response_2b.response_metadata['token_usage']['completion_tokens']
-  prompt_tokens_2b = response_2b.response_metadata['token_usage']['prompt_tokens']
-  finish_reason_2b=response_2b.response_metadata['finish_reason']
+  if response_2b is not None:
+    completion_tokens_2b = response_2b.response_metadata['token_usage']['completion_tokens']
+    prompt_tokens_2b = response_2b.response_metadata['token_usage']['prompt_tokens']
+    finish_reason_2b=response_2b.response_metadata['finish_reason']
+  else:
+    completion_tokens_2b = None
+    prompt_tokens_2b = None
+    finish_reason_2b = None
 
   # ====== RETURN
   return response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1, response_2a, prompt_value_2a, completion_tokens_2a, prompt_tokens_2a, finish_reason_2a, running_time_2a, response_2b, prompt_value_2b, completion_tokens_2b, prompt_tokens_2b, finish_reason_2b, running_time_2b, chat_history
 
 
 # =========== Experiment pipeline
-def process_llms_and_df_b(llms, df, specific_question_type):
+def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
     # Create df_results as a copy of df
     df_results = df.copy()
 
@@ -153,92 +220,149 @@ def process_llms_and_df_b(llms, df, specific_question_type):
               print(f"KeyError in llm_data for {llm_name}: {e}")
               print(f"Available keys in llm_data: {llm_data.keys()}")
               continue
+            except Exception as e:
+              print(f"Unexpected error occurred: {str(e)}")
+              print(f"Question: {question}")
+              response_1 = None
+              prompt_value_1 = None
+              completion_tokens_1 = None
+              prompt_tokens_1 = None
+              finish_reason_1 = None
+              running_time_1 = None
+              response_2a = None
+              prompt_value_2a = None
+              completion_tokens_2a = None
+              prompt_tokens_2a = None
+              finish_reason_2a = None
+              running_time_2a = None
+              response_2b = None
+              prompt_value_2b = None
+              completion_tokens_2b = None
+              prompt_tokens_2b = None
+              finish_reason_2b = None
+              running_time_2b = None
+              chat_history = [None, None, None, None, None, None, None, None]
+              print("Skipping this question.")
             
-            # POSTPROCESSING
             
-            # chat history
-            chat_history = '\n'.join(chat_history)
-            # prompts
-            prompt_value_1_str = f"System_prompt: {prompt_value_1.messages[0].content}\nUser Prompt: {prompt_value_1.messages[1].content}"
-            prompt_value_2a_str= f"{prompt_value_2a.messages[0].content}\n{prompt_value_2a.messages[1].content}\n{prompt_value_2a.messages[2].content}\n{prompt_value_2a.messages[3].content}"
-            prompt_value_2b_str= f"{prompt_value_2b.messages[0].content}\n{prompt_value_2b.messages[1].content}\n{prompt_value_2b.messages[2].content}\n{prompt_value_2b.messages[3].content}"
+            # WORK
+            if prompt_value_1 is not None:
+              # ================== postprocessing
+              prompt_value_1_str = f"System_prompt: {prompt_value_1.messages[0].content}\nUser Prompt: {prompt_value_1.messages[1].content}"
+              prompt_value_2a_str= f"{prompt_value_2a.messages[0].content}\n{prompt_value_2a.messages[1].content}\n{prompt_value_2a.messages[2].content}\n{prompt_value_2a.messages[3].content}"
+              prompt_value_2b_str= f"{prompt_value_2b.messages[0].content}\n{prompt_value_2b.messages[1].content}\n{prompt_value_2b.messages[2].content}\n{prompt_value_2b.messages[3].content}"
+              chat_history = '\n'.join(chat_history)
             
-            # responses
-            ## Q1
-            response_1_str = response_1.content
-            response_1_parts = response_1_str.split('\n', 1)
-            response_1_label = response_1_parts[0] if len(response_1_parts) > 0 else ''
-            response_1_explanation = response_1_parts[1] if len(response_1_parts) > 1 else ''
-            # Performance correctedness
-            response_1_label_lower = response_1_label.lower()
-            row_performance = 1 if response_1_label_lower == correct_answer_lower else 0
+              # --- Q1
+              response_1_str = response_1.content
+              response_1_parts = response_1_str.split('\n', 1)
+              response_1_label = response_1_parts[0] if len(response_1_parts) > 0 else ''
+              response_1_explanation = response_1_parts[1] if len(response_1_parts) > 1 else ''
+              # Performance correctedness
+              response_1_label_lower = response_1_label.lower()
+              row_performance = 1 if response_1_label_lower == correct_answer_lower else 0
             
-            ## Q2
-            response_2a_str = response_2a.content
-            response_2a_parts = response_2a_str.split('\n', 1)
-            response_2a_label = response_2a_parts[0] if len(response_2a_parts) > 0 else ''
-            response_2a_explanation = response_2a_parts[1] if len(response_2a_parts) > 1 else ''
+              # --- Q2
+              response_2a_str = response_2a.content
+              response_2a_parts = response_2a_str.split('\n', 1)
+              response_2a_label = response_2a_parts[0] if len(response_2a_parts) > 0 else ''
+              response_2a_explanation = response_2a_parts[1] if len(response_2a_parts) > 1 else ''
+              
+              response_2b_str = response_2b.content
+              response_2b_parts = response_2b_str.split('\n', 1)
+              response_2b_label = response_2b_parts[0] if len(response_2b_parts) > 0 else ''
+              response_2b_explanation = response_2b_parts[1] if len(response_2b_parts) > 1 else ''
             
-            response_2b_str = response_2b.content
-            response_2b_parts = response_2b_str.split('\n', 1)
-            response_2b_label = response_2b_parts[0] if len(response_2b_parts) > 0 else ''
-            response_2b_explanation = response_2b_parts[1] if len(response_2b_parts) > 1 else ''
-            
-            # ----- Store experiment parameters in df_results
-            # specific question
-            df_results.loc[idx_val, f'{llm_name}_specific_question'] = specific_question_type
-            # Prompts
-            df_results.loc[idx_val, f'{llm_name}_prompt1'] = prompt_value_1_str
-            df_results.loc[idx_val, f'{llm_name}_prompt2a'] = prompt_value_2a_str
-            df_results.loc[idx_val, f'{llm_name}_prompt2b'] = prompt_value_2b_str
-            # Responses
-            df_results.loc[idx_val, f'{llm_name}_response1'] = response_1_str
-            df_results.loc[idx_val, f'{llm_name}_response2'] = response_2a_str
-            df_results.loc[idx_val, f'{llm_name}_response2'] = response_2b_str
-            # Chat History
-            df_results.loc[idx_val, f'{llm_name}_chat_history'] = chat_history
-            # Metadata
-            ## Q1
-            df_results.loc[idx_val, f'{llm_name}_finish_reason_1'] = finish_reason_1
-            df_results.loc[idx_val, f'{llm_name}_prompt_tokens_1'] = prompt_tokens_1
-            df_results.loc[idx_val, f'{llm_name}_completion_tokens_1'] = completion_tokens_1
-            df_results.loc[idx_val, f'{llm_name}_running_time_1'] = running_time_1
-            ## Q2a
-            df_results.loc[idx_val, f'{llm_name}_finish_reason_2a'] = finish_reason_2a
-            df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2a'] = prompt_tokens_2a
-            df_results.loc[idx_val, f'{llm_name}_completion_tokens_2a'] = completion_tokens_2a
-            df_results.loc[idx_val, f'{llm_name}_running_time_2a'] = running_time_2a
-            ## Q2b
-            df_results.loc[idx_val, f'{llm_name}_finish_reason_2b'] = finish_reason_2b
-            df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2b'] = prompt_tokens_2b
-            df_results.loc[idx_val, f'{llm_name}_completion_tokens_2b'] = completion_tokens_2b
-            df_results.loc[idx_val, f'{llm_name}_running_time_2b'] = running_time_2b
-            # Pricing
-            ## Q1
-            df_results.loc[idx_val, f'{llm_name}_input_price_1'] = llm_data["price_per_input_token"] * prompt_tokens_1
-            df_results.loc[idx_val, f'{llm_name}_output_price_1'] = llm_data["price_per_output_token"] * completion_tokens_1
-            ## Q2a
-            df_results.loc[idx_val, f'{llm_name}_input_price_2a'] = llm_data["price_per_input_token"] * prompt_tokens_2a
-            df_results.loc[idx_val, f'{llm_name}_output_price_2a'] = llm_data["price_per_output_token"] * completion_tokens_2a
-            ## Q2b
-            df_results.loc[idx_val, f'{llm_name}_input_price_2b'] = llm_data["price_per_input_token"] * prompt_tokens_2b
-            df_results.loc[idx_val, f'{llm_name}_output_price_2b'] = llm_data["price_per_output_token"] * completion_tokens_2b
-            ## Total
-            df_results.loc[idx_val, f'{llm_name}_total_price'] = df_results.loc[idx_val, f'{llm_name}_input_price_1'] + df_results.loc[idx_val, f'{llm_name}_output_price_1']+df_results.loc[idx_val, f'{llm_name}_input_price_2'] + df_results.loc[idx_val, f'{llm_name}_output_price_2a']+ df_results.loc[idx_val, f'{llm_name}_output_price_2b']
-            # ---- Store experiment results in df_results
-            df_results.loc[idx_val, f'{llm_name}_label1'] = response_1_label
-            df_results.loc[idx_val, f'{llm_name}_explanation1'] = response_1_explanation
-            df_results.loc[idx_val, f'{llm_name}_label2a'] = response_2a_label
-            df_results.loc[idx_val, f'{llm_name}_explanation2a'] = response_2a_explanation
-            df_results.loc[idx_val, f'{llm_name}_label2b'] = response_2b_label
-            df_results.loc[idx_val, f'{llm_name}_explanation2b'] = response_2b_explanation
-            # Performance
-            df_results.loc[idx_val, f'{llm_name}_performance'] = row_performance
+              # ================== storage
+              # specific question
+              df_results.loc[idx_val, f'{llm_name}_specific_question'] = specific_question_type
+              # Prompts
+              df_results.loc[idx_val, f'{llm_name}_prompt1'] = prompt_value_1_str
+              df_results.loc[idx_val, f'{llm_name}_prompt2a'] = prompt_value_2a_str
+              df_results.loc[idx_val, f'{llm_name}_prompt2b'] = prompt_value_2b_str
+              # Responses
+              df_results.loc[idx_val, f'{llm_name}_response1'] = response_1_str
+              df_results.loc[idx_val, f'{llm_name}_response2'] = response_2a_str
+              df_results.loc[idx_val, f'{llm_name}_response2'] = response_2b_str
+              # Chat History
+              df_results.loc[idx_val, f'{llm_name}_chat_history'] = chat_history
+              # Metadata
+              ## Q1
+              df_results.loc[idx_val, f'{llm_name}_finish_reason_1'] = finish_reason_1
+              df_results.loc[idx_val, f'{llm_name}_prompt_tokens_1'] = prompt_tokens_1
+              df_results.loc[idx_val, f'{llm_name}_completion_tokens_1'] = completion_tokens_1
+              df_results.loc[idx_val, f'{llm_name}_running_time_1'] = running_time_1
+              ## Q2a
+              df_results.loc[idx_val, f'{llm_name}_finish_reason_2a'] = finish_reason_2a
+              df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2a'] = prompt_tokens_2a
+              df_results.loc[idx_val, f'{llm_name}_completion_tokens_2a'] = completion_tokens_2a
+              df_results.loc[idx_val, f'{llm_name}_running_time_2a'] = running_time_2a
+              ## Q2b
+              df_results.loc[idx_val, f'{llm_name}_finish_reason_2b'] = finish_reason_2b
+              df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2b'] = prompt_tokens_2b
+              df_results.loc[idx_val, f'{llm_name}_completion_tokens_2b'] = completion_tokens_2b
+              df_results.loc[idx_val, f'{llm_name}_running_time_2b'] = running_time_2b
+              # Pricing
+              ## Q1
+              df_results.loc[idx_val, f'{llm_name}_input_price_1'] = llm_data["price_per_input_token"] * prompt_tokens_1
+              df_results.loc[idx_val, f'{llm_name}_output_price_1'] = llm_data["price_per_output_token"] * completion_tokens_1
+              ## Q2a
+              df_results.loc[idx_val, f'{llm_name}_input_price_2a'] = llm_data["price_per_input_token"] * prompt_tokens_2a
+              df_results.loc[idx_val, f'{llm_name}_output_price_2a'] = llm_data["price_per_output_token"] * completion_tokens_2a
+              ## Q2b
+              df_results.loc[idx_val, f'{llm_name}_input_price_2b'] = llm_data["price_per_input_token"] * prompt_tokens_2b
+              df_results.loc[idx_val, f'{llm_name}_output_price_2b'] = llm_data["price_per_output_token"] * completion_tokens_2b
+              ## Total
+              df_results.loc[idx_val, f'{llm_name}_total_price'] = df_results.loc[idx_val, f'{llm_name}_input_price_1'] + df_results.loc[idx_val, f'{llm_name}_output_price_1']+df_results.loc[idx_val, f'{llm_name}_input_price_2a'] + df_results.loc[idx_val, f'{llm_name}_output_price_2a']+df_results.loc[idx_val, f'{llm_name}_input_price_2b']+ df_results.loc[idx_val, f'{llm_name}_output_price_2b']
+              # ---- Store experiment results in df_results
+              df_results.loc[idx_val, f'{llm_name}_label1'] = response_1_label
+              df_results.loc[idx_val, f'{llm_name}_explanation1'] = response_1_explanation
+              df_results.loc[idx_val, f'{llm_name}_label2a'] = response_2a_label
+              df_results.loc[idx_val, f'{llm_name}_explanation2a'] = response_2a_explanation
+              df_results.loc[idx_val, f'{llm_name}_label2b'] = response_2b_label
+              df_results.loc[idx_val, f'{llm_name}_explanation2b'] = response_2b_explanation
+              # Performance
+              df_results.loc[idx_val, f'{llm_name}_performance'] = row_performance
+            else:
+              df_results.loc[idx_val, f'{llm_name}_finish_reason_1'] = None
+              df_results.loc[idx_val, f'{llm_name}_prompt_tokens_1'] = None
+              df_results.loc[idx_val, f'{llm_name}_completion_tokens_1'] = None
+              df_results.loc[idx_val, f'{llm_name}_running_time_1'] = None
+              df_results.loc[idx_val, f'{llm_name}_input_price_1'] = None
+              df_results.loc[idx_val, f'{llm_name}_output_price_1'] = None
+              df_results.loc[idx_val, f'{llm_name}_label1'] = None
+              df_results.loc[idx_val, f'{llm_name}_explanation1'] = None
+              # label2a
+              df_results.loc[idx_val, f'{llm_name}_finish_reason_2a'] = None
+              df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2a'] = None
+              df_results.loc[idx_val, f'{llm_name}_completion_tokens_2a'] = None
+              df_results.loc[idx_val, f'{llm_name}_running_time_2a'] = None
+              df_results.loc[idx_val, f'{llm_name}_input_price_2a'] = None
+              df_results.loc[idx_val, f'{llm_name}_output_price_2a'] = None
+              df_results.loc[idx_val, f'{llm_name}_label2a'] = None
+              df_results.loc[idx_val, f'{llm_name}_explanation2a'] = None
+              
+              # label2b
+              df_results.loc[idx_val, f'{llm_name}_finish_reason_2b'] = None
+              df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2b'] = None
+              df_results.loc[idx_val, f'{llm_name}_completion_tokens_2b'] = None
+              df_results.loc[idx_val, f'{llm_name}_running_time_2b'] = None
+              df_results.loc[idx_val, f'{llm_name}_input_price_2b'] = None
+              df_results.loc[idx_val, f'{llm_name}_output_price_2b'] = None
+              df_results.loc[idx_val, f'{llm_name}_label2b'] = None
+              df_results.loc[idx_val, f'{llm_name}_explanation2b'] = None
+              
+              # total
+              df_results.loc[idx_val, f'{llm_name}_total_price'] = None
+              df_results.loc[idx_val, f'{llm_name}_performance'] = None
             
             # ----- Print progress every 10%
             if (idx_val + 1) % progress_interval == 0:
                 progress_percentage = ((idx_val + 1) / total_rows) * 100
                 print(f"Progress: {progress_percentage:.1f}% complete")
+                if saving_path is not None:
+                    df_results.to_csv(saving_path, index=False)
+                    print(f"Saved progress to {saving_path}")
 
         # You can also keep a running total if needed
         total_performance = df_results[f'{llm_name}_performance'].sum()
