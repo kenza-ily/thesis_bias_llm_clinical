@@ -1,0 +1,13 @@
+LLM,Gender,Accuracy,Count
+gpt3,male,42.00%,200
+gpt3,female,43.00%,200
+gpt3,neutral,42.00%,200
+gpt3,Overall,42.33%,600
+gpt3,Chi-square,"Chi2: 0.0546, p: 0.9731",N/A
+gpt3,Hypothesis,Fail to reject,N/A
+gpt4o,male,57.00%,200
+gpt4o,female,58.50%,200
+gpt4o,neutral,59.00%,200
+gpt4o,Overall,58.17%,600
+gpt4o,Chi-square,"Chi2: 0.1781, p: 0.9148",N/A
+gpt4o,Hypothesis,Fail to reject,N/A
