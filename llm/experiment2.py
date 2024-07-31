@@ -24,7 +24,7 @@ def handle_api_call(func, *args, **kwargs):
 
 
 # =========== Heart of the experiment
-def experiment1_llm_pipeline_b(llm,case,question,options,specific_question_type):
+def experiment2_llm_pipeline(llm,case,question,options,specific_question_type):
   # Debugging
   if llm is None:
         raise ValueError("LLM model is None. Please ensure a valid model is provided.")
@@ -126,7 +126,7 @@ def experiment1_llm_pipeline_b(llm,case,question,options,specific_question_type)
 
 
 # =========== Experiment pipeline
-def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
+def process_llms_and_df_exp2(llms, df, specific_question_type, saving_path=None):
     # Create df_results as a copy of df
     df_results = df.copy()
 
@@ -158,7 +158,7 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
 
             # Run the LLM
             try:
-              response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1, response_2, prompt_value_2, completion_tokens_2, prompt_tokens_2, finish_reason_2, running_time_2, chat_history = experiment1_llm_pipeline_b(
+              response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1, response_2, prompt_value_2, completion_tokens_2, prompt_tokens_2, finish_reason_2, running_time_2, chat_history = experiment2_llm_pipeline(
               llm=llm_model,
               case=clinical_case,
               question=question,
