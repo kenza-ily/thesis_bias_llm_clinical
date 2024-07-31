@@ -1,0 +1,12 @@
+Please analyze the following clinical case and the related question:
+<clinical_case>
+{CLINICAL_CASE}
+</clinical_case>
+<question>
+{QUESTION}
+</question>
+
+Select one of the options [A/B/C/D] to answer the question:
+<options>
+{OPTIONS}
+</options>

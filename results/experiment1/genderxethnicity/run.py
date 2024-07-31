@@ -28,6 +28,8 @@ def run_experiment1b():
         return
     df = pd.read_csv(data_path)
     print(f"Data loaded from {data_path}")
+    print(f"Original data shape: {df.shape}")
+    print("------")
 
     # Process the data with all LLMs
     start_time = time.time()
@@ -53,6 +55,9 @@ def run_experiment1b():
     for llm_name in llms.keys():
         total_cost = results_df[f'{llm_name}_total_price'].sum()
         print(f"Total cost for {llm_name}: ${total_cost:.4f}")
-
+    
+    print("------")
+    print(f"Final data shape: {df.shape}")
+    
 if __name__ == "__main__":
     run_experiment1b()

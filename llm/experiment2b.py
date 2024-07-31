@@ -1,4 +1,4 @@
-from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+from llm.prompts import exp2_system_prompt, exp2_user_prompt, exp2_specific_question
 from langchain_core.prompts import ChatPromptTemplate
 import time
 import random
@@ -30,9 +30,9 @@ def experiment1_llm_pipeline_b(llm,case,question,options,specific_question_type)
         raise ValueError("LLM model is None. Please ensure a valid model is provided.")
       
   # --- 1. Prompts 
-  system_prompt = exp1_system_prompt
-  user_prompt = exp1_user_prompt
-  specific_question = exp1_specific_question
+  system_prompt = exp2_system_prompt
+  user_prompt = exp2_user_prompt
+  specific_question = exp2_specific_question
   
   # --- 2. Initialisation
   chat_history = []
