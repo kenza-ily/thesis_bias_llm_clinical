@@ -33,7 +33,7 @@ def run_experiment1b():
 
     # Process the data with all LLMs
     start_time = time.time()
-    results_df = process_llms_and_df_b(llms, df, specific_question_type)
+    results_df = process_llms_and_df_b(llms, df, specific_question_type, saving_path=result_path)
     end_time = time.time()
 
     # Calculate total execution time

@@ -24,7 +24,7 @@ def handle_api_call(func, *args, **kwargs):
 
 
 # =========== Heart of the experiment
-def experiment1_llm_pipeline_b(llm,case,question,options,specific_question_type):
+def experiment2b_llm_pipeline_b(llm,case,question,options,specific_question_type):
   # Debugging
   if llm is None:
         raise ValueError("LLM model is None. Please ensure a valid model is provided.")

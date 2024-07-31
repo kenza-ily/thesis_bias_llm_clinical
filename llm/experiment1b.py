@@ -344,6 +344,9 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
                     print(f"Saved progress to {saving_path}")
 
         # You can also keep a running total if needed
+        if saving_path is not None:
+                    df_results.to_csv(saving_path, index=False)
+                    print(f"Saved progress for {llm_name} to {saving_path}")
         total_performance = df_results[f'{llm_name}_performance'].sum()
         accuracy = total_performance / len(df_results) * 100
         print(f"Total performance for {llm_name}: {total_performance}/{len(df_results)}")
