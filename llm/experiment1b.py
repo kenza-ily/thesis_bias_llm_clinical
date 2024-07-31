@@ -187,6 +187,9 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
         # Create new columns for this LLM's responses and times
         df_results[f'{llm_name}_response'] = ''
         df_results[f'{llm_name}_time'] = 0.0
+        df_results[f'{llm_name}_input_price'] = ''
+        df_results[f'{llm_name}_output_price'] = ''
+        df_results[f'{llm_name}_total_price'] = ''
         
         # Get the LLM model
         llm_model = llm_data.get("model")
@@ -242,15 +245,21 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
             
             # WORK
             if prompt_value_1 is not None and hasattr(prompt_value_1, 'messages'):
+                # prompts
                 prompt_value_1_str = f"System_prompt: {prompt_value_1.messages[0].content}\nUser Prompt: {prompt_value_1.messages[1].content}"
                 
+                # response 1
                 response_1_str = response_1.content if response_1 else ''
                 response_1_parts = response_1_str.split('\n', 1)
                 response_1_label = response_1_parts[0] if len(response_1_parts) > 0 else ''
                 response_1_explanation = response_1_parts[1] if len(response_1_parts) > 1 else ''
                 
+                # performance
                 response_1_label_lower = response_1_label.lower()
                 row_performance = 1 if response_1_label_lower == correct_answer_lower else 0
+                
+                # chat history
+                chat_history_str="\n".join(chat_history)
 
                 # Store prompt_value_1 related data
                 df_results.loc[idx_val, f'{llm_name}_prompt1'] = prompt_value_1_str
@@ -262,6 +271,7 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
                 df_results.loc[idx_val, f'{llm_name}_prompt_tokens_1'] = prompt_tokens_1
                 df_results.loc[idx_val, f'{llm_name}_finish_reason_1'] = finish_reason_1
                 df_results.loc[idx_val, f'{llm_name}_running_time_1'] = running_time_1
+                df_results.loc[idx_val, f'{llm_name}_chat_history'] = chat_history_str
             else:
                 df_results.loc[idx_val, f'{llm_name}_prompt1'] = None
                 df_results.loc[idx_val, f'{llm_name}_response1'] = None
@@ -272,6 +282,7 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
                 df_results.loc[idx_val, f'{llm_name}_running_time_1'] = None
                 df_results.loc[idx_val, f'{llm_name}_explanation1'] = None
                 df_results.loc[idx_val, f'{llm_name}_performance'] = None
+                df_results.loc[idx_val, f'{llm_name}_chat_history'] = None
 
             # Processing for prompt_value_2a
             if prompt_value_2a is not None and hasattr(prompt_value_2a, 'messages'):
@@ -331,10 +342,14 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
                 df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2b'] = None
                 df_results.loc[idx_val, f'{llm_name}_finish_reason_2b'] = None
                 df_results.loc[idx_val, f'{llm_name}_running_time_2b'] = None
-                  
-                
-                
             
+            # Pricing
+            input_tokens = (prompt_tokens_1 or 0) + (prompt_tokens_2a or 0) + (prompt_tokens_2b or 0)
+            output_tokens = (completion_tokens_1 or 0) + (completion_tokens_2a or 0) + (completion_tokens_2b or 0)
+            df_results.loc[idx_val, f'{llm_name}_input_price'] = llm_data["price_per_input_token"] * input_tokens
+            df_results.loc[idx_val, f'{llm_name}_output_price'] = llm_data["price_per_output_token"] * output_tokens
+            df_results.loc[idx_val, f'{llm_name}_total_price'] = df_results.loc[idx_val, f'{llm_name}_input_price'] + df_results.loc[idx_val, f'{llm_name}_output_price']  
+                
             # ----- Print progress every 10%
             if (idx_val + 1) % progress_interval == 0:
                 progress_percentage = ((idx_val + 1) / total_rows) * 100
@@ -347,11 +362,30 @@ def process_llms_and_df_b(llms, df, specific_question_type, saving_path=None):
         if saving_path is not None:
                     df_results.to_csv(saving_path, index=False)
                     print(f"Saved progress for {llm_name} to {saving_path}")
+                    
+        # Check if performance column exists, if not, create it
+        if f'{llm_name}_performance' not in df_results.columns:
+            print(f"Warning: '{llm_name}_performance' column not found. Creating it with default value of 0.")
+            df_results[f'{llm_name}_performance'] = 0
+
+        # METADATA PRINTs
+        # ----------------- Accuracy
+        # Calculate and print accuracy
         total_performance = df_results[f'{llm_name}_performance'].sum()
-        accuracy = total_performance / len(df_results) * 100
-        print(f"Total performance for {llm_name}: {total_performance}/{len(df_results)}")
-        print(f"Total price for {llm_name}: {df_results[f'{llm_name}_total_price'].sum()}")
+        total_samples = len(df_results)
+        accuracy = (total_performance / total_samples) * 100 if total_samples > 0 else 0
+        print(f"Total performance for {llm_name}: {total_performance}/{total_samples}")
         print(f"Accuracy for {llm_name}: {accuracy:.2f}%")
+        # ----------------- Total price
+        # Check if total_price column exists, if not, create it
+        if f'{llm_name}_total_price' not in df_results.columns:
+            print(f"Warning: '{llm_name}_total_price' column not found. Creating it.")
+            df_results[f'{llm_name}_total_price'] = df_results[f'{llm_name}_input_price'] + df_results[f'{llm_name}_output_price']
+
+        # Calculate and print total price
+        total_price = df_results[f'{llm_name}_total_price'].sum()
+        print(f"Total price for {llm_name}: ${total_price:.4f}")
+        # DONE
         print(f"Finished processing with LLM: {llm_name}")  # Print when finished with current LLM
             
     print("\nAll LLMs processed. Returning results.")

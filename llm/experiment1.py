@@ -208,7 +208,7 @@ def process_llms_and_df(llms, df, specific_question_type,saving_path=None):
                     df_results.to_csv(saving_path, index=False)
                 
             
-            print(f"Finished processing with LLM: {llm_name}")  # Print when finished with current LLM
+            
           
         # You can also keep a running total if needed
         total_performance = df_results[f'{llm_name}_performance'].sum()
