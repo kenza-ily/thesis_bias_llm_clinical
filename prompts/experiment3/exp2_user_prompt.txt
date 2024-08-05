@@ -5,3 +5,8 @@ Please analyze the following clinical case and the related question:
 <question>
 {QUESTION}
 </question>
+
+Select one of the options [A/B/C/D] to answer the question:
+<options>
+{OPTIONS}
+</options>

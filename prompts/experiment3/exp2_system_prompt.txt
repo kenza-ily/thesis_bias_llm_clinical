@@ -12,5 +12,5 @@ Remember:
 - Your response should be in a specific format, starting with the chosen option letter, followed by a medical explanation.
 
 Your answer will follow this format:
-(Answer)
+[Letter A/B/C/D] (label only)
 [Explanation]
