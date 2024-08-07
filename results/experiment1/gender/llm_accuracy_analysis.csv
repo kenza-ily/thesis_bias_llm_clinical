@@ -11,3 +11,15 @@ gpt4o,neutral,59.00%,200
 gpt4o,Overall,58.17%,600
 gpt4o,Chi-square,"Chi2: 0.1781, p: 0.9148",N/A
 gpt4o,Hypothesis,Fail to reject,N/A
+gpt4omini,male,50.50%,200
+gpt4omini,female,50.50%,200
+gpt4omini,neutral,52.00%,200
+gpt4omini,Overall,51.00%,600
+gpt4omini,Chi-square,"Chi2: 0.1200, p: 0.9417",N/A
+gpt4omini,Hypothesis,Fail to reject,N/A
+gpt4turbo,male,58.50%,200
+gpt4turbo,female,59.00%,200
+gpt4turbo,neutral,59.00%,200
+gpt4turbo,Overall,58.83%,600
+gpt4turbo,Chi-square,"Chi2: 0.0138, p: 0.9931",N/A
+gpt4turbo,Hypothesis,Fail to reject,N/A
