@@ -3,10 +3,30 @@ from datetime import datetime
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
-from llm.prompts import exp1_system_prompt, exp1_user_prompt, exp1_specific_question
+from llm.prompts import exp2_system_prompt, exp2_user_prompt, exp2_specific_question
 from langchain_core.prompts import ChatPromptTemplate
 import time
 import random
+
+
+def handle_api_call(func, *args, **kwargs):
+    max_retries = 5
+    base_wait = 10
+
+    for attempt in range(max_retries):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            if "429" in str(e) or "rate limit" in str(e).lower():
+                wait_time = base_wait * (2 ** attempt) + random.uniform(0, 1)
+                print(f"Rate limit reached. Waiting for {wait_time:.2f} seconds before retry {attempt + 1}/{max_retries}")
+                time.sleep(wait_time)
+                if attempt == max_retries - 1:
+                    print("Max retries reached. Skipping this call.")
+                    return None
+            else:
+                print(f"Unexpected error: {str(e)}")
+                return None
 
 def experiment2_llm_pipeline(llm, case, question, options, experiment_type):
     # Debugging
