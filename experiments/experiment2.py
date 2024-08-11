@@ -4,10 +4,11 @@ import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 from llm.prompts import exp2_system_prompt, exp2_user_prompt, exp2_specific_question
-from langchain_core.prompts import ChatPromptTemplate
 import time
 import random
-
+from langchain_core.prompt_values import ChatPromptValue
+from langchain_core.messages import BaseMessage
+from langchain_core.prompts import ChatPromptTemplate
 
 def handle_api_call(func, *args, **kwargs):
     max_retries = 5
@@ -163,6 +164,19 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir):
     
     return df_llm
 
+from langchain_core.prompt_values import ChatPromptValue
+from langchain_core.messages import BaseMessage
+
+def extract_prompt_content(prompt_value):
+    if isinstance(prompt_value, ChatPromptValue):
+        return "\n".join(message.content for message in prompt_value.messages)
+    return str(prompt_value)
+
+def extract_response_content(response):
+    if hasattr(response, 'content'):
+        return response.content
+    return str(response)
+
 def store_results_in_df(df, idx, llm_name, results, experiment_type):
     # Unpack results
     (response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1,
@@ -171,16 +185,16 @@ def store_results_in_df(df, idx, llm_name, results, experiment_type):
      chat_history) = results
 
     # Store results for Q1
-    df.at[idx, f'{llm_name}_response1'] = response_1.content if response_1 else None
-    df.at[idx, f'{llm_name}_prompt1'] = prompt_value_1.content if prompt_value_1 else None
+    df.at[idx, f'{llm_name}_response1'] = extract_response_content(response_1)
+    df.at[idx, f'{llm_name}_prompt1'] = extract_prompt_content(prompt_value_1)
     df.at[idx, f'{llm_name}_completion_tokens_1'] = completion_tokens_1
     df.at[idx, f'{llm_name}_prompt_tokens_1'] = prompt_tokens_1
     df.at[idx, f'{llm_name}_finish_reason_1'] = finish_reason_1
     df.at[idx, f'{llm_name}_running_time_1'] = running_time_1
 
     # Store results for Q2a (Gender)
-    df.at[idx, f'{llm_name}_response2a'] = response_2a.content if response_2a else None
-    df.at[idx, f'{llm_name}_prompt2a'] = prompt_value_2a.content if prompt_value_2a else None
+    df.at[idx, f'{llm_name}_response2a'] = extract_response_content(response_2a)
+    df.at[idx, f'{llm_name}_prompt2a'] = extract_prompt_content(prompt_value_2a)
     df.at[idx, f'{llm_name}_completion_tokens_2a'] = completion_tokens_2a
     df.at[idx, f'{llm_name}_prompt_tokens_2a'] = prompt_tokens_2a
     df.at[idx, f'{llm_name}_finish_reason_2a'] = finish_reason_2a
@@ -188,19 +202,24 @@ def store_results_in_df(df, idx, llm_name, results, experiment_type):
 
     # Store results for Q2b (Ethnicity) if applicable
     if experiment_type == "GxE":
-        df.at[idx, f'{llm_name}_response2b'] = response_2b.content if response_2b else None
-        df.at[idx, f'{llm_name}_prompt2b'] = prompt_value_2b.content if prompt_value_2b else None
+        df.at[idx, f'{llm_name}_response2b'] = extract_response_content(response_2b)
+        df.at[idx, f'{llm_name}_prompt2b'] = extract_prompt_content(prompt_value_2b)
         df.at[idx, f'{llm_name}_completion_tokens_2b'] = completion_tokens_2b
         df.at[idx, f'{llm_name}_prompt_tokens_2b'] = prompt_tokens_2b
         df.at[idx, f'{llm_name}_finish_reason_2b'] = finish_reason_2b
         df.at[idx, f'{llm_name}_running_time_2b'] = running_time_2b
 
     # Store chat history
-    df.at[idx, f'{llm_name}_chat_history'] = '\n'.join(chat_history) if chat_history else None
+    if chat_history:
+        df.at[idx, f'{llm_name}_chat_history'] = "\n".join(
+            str(message) for message in chat_history if isinstance(message, BaseMessage)
+        )
+    else:
+        df.at[idx, f'{llm_name}_chat_history'] = None
 
     # Calculate and store performance
     correct_answer = df.at[idx, 'answer_idx_shuffled'].lower()
-    response_label = response_1.content.split('\n', 1)[0].lower() if response_1 else ''
+    response_label = extract_response_content(response_1).split('\n', 1)[0].lower()
     df.at[idx, f'{llm_name}_performance'] = 1 if response_label == correct_answer else 0
 
 def calculate_and_print_metrics(df, llm_name):
