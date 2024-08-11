@@ -133,15 +133,14 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir):
                 store_results_in_df(df_llm, idx, llm_name, results, experiment_type)
             except Exception as e:
                 print(f"Error processing row {idx} for {llm_name}: {str(e)}")
-
-    # Calculate and print performance metrics
-    calculate_and_print_metrics(df_llm, llm_name)
-
     # Save results
     save_path = os.path.join(experiment_dir, f"exp2_{experiment_type}_{llm_name}.csv")
     df_llm.to_csv(save_path, index=False)
     print(f"Saved results for {llm_name} to {save_path}")
 
+    # Calculate and print performance metrics
+    calculate_and_print_metrics(df_llm, llm_name)
+    
     return df_llm
 
 def store_results_in_df(df, idx, llm_name, results, experiment_type):
@@ -203,7 +202,7 @@ def process_llms_and_df_exp2(llms, df, experiment_type, saving_path=None):
     print(f"Starting experiment: {experiment_name}")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    experiment_dir = f"results_{experiment_name}_{timestamp}"
+    experiment_dir = f"results_{timestamp}_{experiment_name}"
     os.makedirs(experiment_dir, exist_ok=True)
     print(f"Created directory for experiment results: {experiment_dir}")
 
@@ -213,6 +212,3 @@ def process_llms_and_df_exp2(llms, df, experiment_type, saving_path=None):
 
     print("\nAll LLMs processed. Experiment complete.")
     return results
-
-# Example usage:
-results = process_llms_and_df_exp2(llms, df, experiment_type="GxE")
