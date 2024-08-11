@@ -10,7 +10,7 @@ sys.path.insert(0, project_root)
 
 # Import required modules
 from llm.llm_config import llms
-from llm.experiment0 import process_llms_and_df_0
+from experiments.experiment0 import process_llms_and_df_0
 
 def run_experiment0():
     # Define paths

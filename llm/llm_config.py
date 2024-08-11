@@ -1,4 +1,4 @@
-from llm.models import get_gpt3_model , get_gpt4o_model
+from llm.models import get_gpt3_model , get_gpt4o_model, get_gpt4omini_model, get_gpt4turbo_model
 import re
 
 def extract_price(variable_name, costs_content):
@@ -11,16 +11,28 @@ with open('data/costs.txt', 'r') as file:
 
 llms = {
     "llm_gpt3": {
-        "model_name": "gpt-3.5-turbo",
+        "model_name": "gpt3.5",
         "model": get_gpt3_model(),
         "price_per_input_token": extract_price("PRICE_PER_INPUT_TOKEN_GPT3", costs_content),
         "price_per_output_token": extract_price("PRICE_PER_OUTPUT_TOKEN_GPT3", costs_content)
     },
     "llm_gpt4o": {
-        "model_name": "gpt-4.0-turbo",
+        "model_name": "gpt4o",
         "model": get_gpt4o_model(),
         "price_per_input_token": extract_price("PRICE_PER_INPUT_TOKEN_GPT4o", costs_content),
         "price_per_output_token": extract_price("PRICE_PER_OUTPUT_TOKEN_GPT4o", costs_content)
-    }
+    },
+    "llm_gpt4omini": {
+        "model_name": "gpt4o-mini",
+        "model": get_gpt4omini_model(),
+        "price_per_input_token": extract_price("PRICE_PER_INPUT_TOKEN_GPT4omini", costs_content),
+        "price_per_output_token": extract_price("PRICE_PER_OUTPUT_TOKEN_GPT4omini", costs_content)
+    },
+    "llm_gpt4turbo": {
+        "model_name": "gpt4-turbo",
+        "model": get_gpt4turbo_model(),
+        "price_per_input_token": extract_price("PRICE_PER_INPUT_TOKEN_GPT4turbo", costs_content),
+        "price_per_output_token": extract_price("PRICE_PER_OUTPUT_TOKEN_GPT4turbo", costs_content)
+    }  
     # Add other LLM configurations here
 }
