@@ -10,7 +10,7 @@ sys.path.insert(0, project_root)
 
 # Import required modules
 from llm.llm_config import llms
-from llm.experiment1b import process_llms_and_df_b
+from experiments.experiment1b import process_llms_and_df_b
 
 # Hard-coded
 specific_question_type = "gender"
