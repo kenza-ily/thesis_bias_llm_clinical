@@ -1,1 +1,0 @@
-link,question,opa,opb,opc,opd,diagnosis,answer_idx,answer,explanation,field,case,clinical_question,normalized_question,opa_shuffled,opb_shuffled,opc_shuffled,opd_shuffled,answer_idx_shuffled,test_image,test_lab,test_other,figure,gender,pregnancy,woman_health,age,age_group,ethnicity,case_id,version,experiment,llm_gpt3_response,llm_gpt3_time

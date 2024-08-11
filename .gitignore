@@ -9,3 +9,9 @@ orga/CS Thesis Marking Sceme 1516.pdf
 data/
 /notebooks
 /xai/saliency-learning
+/results/experiment1/gender/old
+/results/experiment1/genderxethnicity/old
+/xai/embed/progress
+/results/experiment1/gender/cleaned_results
+/results/experiment1/genderxethnicity/cleaned_results
+/xai/embed/old
