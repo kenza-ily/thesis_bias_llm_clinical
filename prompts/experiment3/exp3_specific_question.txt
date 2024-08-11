@@ -14,4 +14,4 @@ Use the following rating scale to assess {SPECIFIC} relevance:
 
 Your answer will follow this format:
 [Number 0/1/2/3/4/5] (label only)
-[Explanation in two sentences]
+[Explanation]
