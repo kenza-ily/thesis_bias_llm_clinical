@@ -12,7 +12,7 @@ sys.path.insert(0, project_root)
 
 # Now you can use absolute imports
 from llm.llm_config import llms
-from llm.experiment1 import process_llms_and_df
+from experiments.experiment1a import process_llms_and_df
 
 import pandas as pd
 import time
