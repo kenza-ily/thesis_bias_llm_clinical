@@ -13,10 +13,28 @@ from experiment2 import process_llms_and_df_exp2
 # Import other necessary libraries
 import pandas as pd
 # =============================================================================
-# Load df
-current_dir = os.path.dirname(os.path.realpath(__file__))
-data_path = os.path.join(current_dir, 'data.csv')
+import os
 
+def find_repo_root(path):
+    while True:
+        if 'results' in os.listdir(path):
+            return path
+        parent = os.path.dirname(path)
+        if parent == path:  # We've reached the root directory
+            raise Exception("Could not find 'results' directory in any parent directory")
+        path = parent
+
+# Get the absolute path of the current script
+current_script_path = os.path.abspath(__file__)
+
+# Find the repo root (parent of "results")
+repo_dir = find_repo_root(os.path.dirname(current_script_path))
+
+# Get the experiment type from the script's parent directory name
+experiment_type = os.path.basename(os.path.dirname(current_script_path))
+
+# Construct the data path
+data_path = os.path.join(repo_dir, 'results', experiment_type, f'{experiment_type}.csv')
 
 
 # =============================================================================
@@ -31,6 +49,7 @@ def main():
 
     # Load the dataset
     try:
+        data_path=get_data_path(experiment_type)
         df = pd.read_csv(data_path)
         print(f"Loaded dataset with {len(df)} rows.")
     except FileNotFoundError:
