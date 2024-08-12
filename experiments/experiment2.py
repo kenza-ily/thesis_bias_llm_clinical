@@ -1,7 +1,14 @@
+import os
+from datetime import datetime
+import pandas as pd
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from tqdm import tqdm
 from llm.prompts import exp2_system_prompt, exp2_user_prompt, exp2_specific_question
-from langchain_core.prompts import ChatPromptTemplate
 import time
 import random
+from langchain_core.prompt_values import ChatPromptValue
+from langchain_core.messages import BaseMessage
+from langchain_core.prompts import ChatPromptTemplate
 
 def handle_api_call(func, *args, **kwargs):
     max_retries = 5
@@ -22,252 +29,225 @@ def handle_api_call(func, *args, **kwargs):
                 print(f"Unexpected error: {str(e)}")
                 return None
 
-
-# =========== Heart of the experiment
-def experiment2_llm_pipeline(llm,case,question,options,specific_question_type):
-  # Debugging
-  if llm is None:
+def experiment2_llm_pipeline(llm, case, question, options, experiment_type):
+    # Debugging
+    if llm is None:
         raise ValueError("LLM model is None. Please ensure a valid model is provided.")
       
-  # --- 1. Prompts 
-  system_prompt = exp2_system_prompt
-  user_prompt = exp2_user_prompt
-  specific_question = exp2_specific_question
+    # --- 1. Prompts 
+    system_prompt = exp2_system_prompt
+    user_prompt = exp2_user_prompt
+    specific_question = exp2_specific_question
   
-  # --- 2. Initialisation
-  chat_history = []
+    # --- 2. Initialisation
+    chat_history = []
   
-  # -------- Q1
-  # prompt
-  prompt_1 = ChatPromptTemplate.from_messages([
-    ("system", system_prompt),
-    ("user", user_prompt)
-])
-  # chain
-  chain_1 = prompt_1 | llm
+    # -------- Q1
+    prompt_1 = ChatPromptTemplate.from_messages([
+        ("system", system_prompt),
+        ("user", user_prompt)
+    ])
+    chain_1 = prompt_1 | llm
   
-  # invoke
-  # PROMPT1
-  prompt_value_1 = handle_api_call(prompt_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options})
-  if prompt_value_1 is None:
+    # invoke
+    prompt_value_1 = handle_api_call(prompt_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options})
+    if prompt_value_1 is None:
         print("ERROR - Prompt 1: Failed to get a valid response")
         print(f"Case: {case}")
         print("Skipping this question.")
         return None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, [None, None, None]
-  # CHAIN1
-  start_time_1 = time.time()
-  response_1 = handle_api_call(chain_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options})
-  end_time_1 = time.time()
-  running_time_1 = end_time_1 - start_time_1
-  if response_1 is None:
+
+    start_time_1 = time.time()
+    response_1 = handle_api_call(chain_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options})
+    end_time_1 = time.time()
+    running_time_1 = end_time_1 - start_time_1
+    
+    if response_1 is None:
         print("ERROR - Response 1: Failed to get a valid response")
         print(f"Case: {case}")
         print("Skipping this question.")
         return None, prompt_value_1, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, [None, None, None]
-  
-  # metadata
-  if prompt_value_1 is not None:
-    prompt_tokens_1 = response_1.response_metadata['token_usage']['prompt_tokens']
+
+    # metadata
     completion_tokens_1 = response_1.response_metadata['token_usage']['completion_tokens']
-    finish_reason_1=response_1.response_metadata['finish_reason']
-  else:
-    prompt_tokens_1 = None
-    completion_tokens_1 = None
-    finish_reason_1 = None
+    prompt_tokens_1 = response_1.response_metadata['token_usage']['prompt_tokens']
+    finish_reason_1 = response_1.response_metadata['finish_reason']
   
-  # -------- Q2
-  # question selection
-  if specific_question_type=='gender':
-    specific='gender'
-  elif specific_question_type=='ethnicity':
-    specific='ethnicity'
-  else:
-    raise ValueError("Unrecognised question type")
+    # -------- Q2 (Gender)
+    prompt_2a = ChatPromptTemplate.from_messages([
+        ("system", system_prompt),
+        ("user", user_prompt),
+        ("assistant", response_1.content),
+        ("user", specific_question)
+    ])
+    chain_2a = prompt_2a | llm
   
-  # prompt
-  prompt_2 = ChatPromptTemplate.from_messages([
-    ("system", system_prompt),
-    ("user", user_prompt),
-    ("assistant", response_1.content),
-    ("user", specific_question)
-])
-  # chain
-  chain_2 = prompt_2 | llm
-  
-  # invoke
-  # -------- Q2
-  try:
-      prompt_value_2 = handle_api_call(prompt_2.invoke, {"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options,"SPECIFIC":specific})
-      start_time_2 = time.time()
-      response_2 = handle_api_call(chain_2.invoke, {"CLINICAL_CASE": case,"QUESTION":question,"OPTIONS":options, "SPECIFIC":specific})
-      end_time_2 = time.time()
-      running_time_2 = end_time_2 - start_time_2
-      chat_history.extend([prompt_value_2.messages[3].content, response_2.content])
-  except Exception as e:
-      print(f"ERROR - Prompt 2: {str(e)}")
-      running_time_2 = None
-      response_2 = None
-      prompt_value_2 = None
-      chat_history.extend([None, None])
-  
-  
-  # metadata
-  if prompt_value_2 is not None:
-    completion_tokens_2 = response_2.response_metadata['token_usage']['completion_tokens']
-    prompt_tokens_2 = response_2.response_metadata['token_usage']['prompt_tokens']
-    finish_reason_2=response_2.response_metadata['finish_reason']
-  else:
-    completion_tokens_2 = None
-    prompt_tokens_2 = None
-    finish_reason_2 = None
+    prompt_value_2a = handle_api_call(prompt_2a.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options, "SPECIFIC": "gender"})
+    start_time_2a = time.time()
+    response_2a = handle_api_call(chain_2a.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options, "SPECIFIC": "gender"})
+    end_time_2a = time.time()
+    running_time_2a = end_time_2a - start_time_2a
+    
+    completion_tokens_2a = response_2a.response_metadata['token_usage']['completion_tokens']
+    prompt_tokens_2a = response_2a.response_metadata['token_usage']['prompt_tokens']
+    finish_reason_2a = response_2a.response_metadata['finish_reason']
 
-  # ====== RETURN
-  return response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1, response_2, prompt_value_2, completion_tokens_2, prompt_tokens_2, finish_reason_2, running_time_2, chat_history
-
-
-# =========== Experiment pipeline
-def process_llms_and_df_exp2(llms, df, specific_question_type, saving_path=None):
-    # Create df_results as a copy of df
-    df_results = df.copy()
-
-    # Initialization
-    total_rows = len(df)
-    progress_interval = max(1, total_rows // 10)  # Calculate 10% of total rows
-
-    # LLM loop
-    for llm_name, llm_data in llms.items():
-        print(f"\nProcessing with LLM: {llm_name}")  # Print current LLM being processed
+    # -------- Q2 (Ethnicity) - Only for GxE experiment
+    if experiment_type == "GxE":
+        prompt_2b = ChatPromptTemplate.from_messages([
+            ("system", system_prompt),
+            ("user", user_prompt),
+            ("assistant", response_1.content),
+            ("user", specific_question)
+        ])
+        chain_2b = prompt_2b | llm
       
-        # Create new columns for this LLM's responses and times
-        df_results[f'{llm_name}_response'] = ''
-        df_results[f'{llm_name}_time'] = 0.0
+        prompt_value_2b = handle_api_call(prompt_2b.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options, "SPECIFIC": "ethnicity"})
+        start_time_2b = time.time()
+        response_2b = handle_api_call(chain_2b.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options, "SPECIFIC": "ethnicity"})
+        end_time_2b = time.time()
+        running_time_2b = end_time_2b - start_time_2b
         
-        # Get the LLM model
-        llm_model = llm_data.get("model")
-        if llm_model is None:
-            print(f"Warning: No model found for {llm_name}. Skipping this LLM.")
-            continue
+        completion_tokens_2b = response_2b.response_metadata['token_usage']['completion_tokens']
+        prompt_tokens_2b = response_2b.response_metadata['token_usage']['prompt_tokens']
+        finish_reason_2b = response_2b.response_metadata['finish_reason']
+    else:
+        response_2b = prompt_value_2b = completion_tokens_2b = prompt_tokens_2b = finish_reason_2b = running_time_2b = None
 
-        # df loop
-        for idx_val, row_val in df_results.iterrows():
-            # Extracting the data
-            clinical_case = row_val['case']
-            question=row_val['normalized_question']
-            options = f"A. {row_val['opa_shuffled']}\nB. {row_val['opb_shuffled']}\nC. {row_val['opc_shuffled']}\nD. {row_val['opd_shuffled']}"
-            correct_answer=row_val['answer_idx_shuffled']; correct_answer_lower = correct_answer.lower()
+    # ====== RETURN
+    return response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1, \
+           response_2a, prompt_value_2a, completion_tokens_2a, prompt_tokens_2a, finish_reason_2a, running_time_2a, \
+           response_2b, prompt_value_2b, completion_tokens_2b, prompt_tokens_2b, finish_reason_2b, running_time_2b, \
+           chat_history
 
-            # Run the LLM
+def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir):
+    print(f"\nProcessing with LLM: {llm_name}")
+    
+    # Create a copy of the dataframe for this LLM
+    df_llm = df.copy()
+    
+    # Get the LLM model
+    llm_model = llm_data.get("model")
+    if llm_model is None:
+        print(f"Warning: No model found for {llm_name}. Skipping this LLM.")
+        return None
+
+    # Use ThreadPoolExecutor for parallel processing
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = []
+        for idx, row in df_llm.iterrows():
+            future = executor.submit(
+                experiment2_llm_pipeline,
+                llm_model,
+                row['case'],
+                row['normalized_question'],
+                f"A. {row['opa_shuffled']}\nB. {row['opb_shuffled']}\nC. {row['opc_shuffled']}\nD. {row['opd_shuffled']}",
+                experiment_type
+            )
+            futures.append((idx, future))
+
+        # Process results as they complete
+        for idx, future in tqdm(futures, total=len(df_llm), desc=f"Processing {llm_name}"):
             try:
-              response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1, response_2, prompt_value_2, completion_tokens_2, prompt_tokens_2, finish_reason_2, running_time_2, chat_history = experiment2_llm_pipeline(
-              llm=llm_model,
-              case=clinical_case,
-              question=question,
-              options=options,
-              specific_question_type=specific_question_type
-          )
-            except KeyError as e:
-              print(f"KeyError in llm_data for {llm_name}: {e}")
-              print(f"Available keys in llm_data: {llm_data.keys()}")
-              continue
+                results = future.result()
+                # Store results in df_llm
+                store_results_in_df(df_llm, idx, llm_name, results, experiment_type)
             except Exception as e:
-              print(f"Unexpected error occurred: {str(e)}")
-              print(f"Question: {question}")
-              response_1 = None
-              prompt_value_1 = None
-              completion_tokens_1 = None
-              prompt_tokens_1 = None
-              finish_reason_1 = None
-              running_time_1 = None
-              response_2 = None
-              prompt_value_2 = None
-              completion_tokens_2 = None
-              prompt_tokens_2 = None
-              finish_reason_2 = None
-              running_time_2 = None
-              chat_history = [None, None, None, None, None, None, None, None]
-              print("Skipping this question.")
-            
-            
-            # WORK
-            if prompt_value_1 is not None and hasattr(prompt_value_1, 'messages'):
-                prompt_value_1_str = f"System_prompt: {prompt_value_1.messages[0].content}\nUser Prompt: {prompt_value_1.messages[1].content}"
-                
-                response_1_str = response_1.content if response_1 else ''
-                response_1_parts = response_1_str.split('\n', 1)
-                response_1_label = response_1_parts[0] if len(response_1_parts) > 0 else ''
-                response_1_explanation = response_1_parts[1] if len(response_1_parts) > 1 else ''
-                
-                response_1_label_lower = response_1_label.lower()
-                row_performance = 1 if response_1_label_lower == correct_answer_lower else 0
+                print(f"Error processing row {idx} for {llm_name}: {str(e)}")
+    # Save results
+    save_path = os.path.join(experiment_dir, f"exp2_{experiment_type}_{llm_name}.csv")
+    df_llm.to_csv(save_path, index=False)
+    print(f"Saved results for {llm_name} to {save_path}")
 
-                # Store prompt_value_1 related data
-                df_results.loc[idx_val, f'{llm_name}_prompt1'] = prompt_value_1_str
-                df_results.loc[idx_val, f'{llm_name}_response1'] = response_1_str
-                df_results.loc[idx_val, f'{llm_name}_label1'] = response_1_label
-                df_results.loc[idx_val, f'{llm_name}_explanation1'] = response_1_explanation
-                df_results.loc[idx_val, f'{llm_name}_performance'] = row_performance
-                df_results.loc[idx_val, f'{llm_name}_completion_tokens_1'] = completion_tokens_1
-                df_results.loc[idx_val, f'{llm_name}_prompt_tokens_1'] = prompt_tokens_1
-                df_results.loc[idx_val, f'{llm_name}_finish_reason_1'] = finish_reason_1
-                df_results.loc[idx_val, f'{llm_name}_running_time_1'] = running_time_1
-            else:
-                df_results.loc[idx_val, f'{llm_name}_prompt1'] = None
-                df_results.loc[idx_val, f'{llm_name}_response1'] = None
-                df_results.loc[idx_val, f'{llm_name}_label1'] = None
-                df_results.loc[idx_val, f'{llm_name}_completion_tokens_1'] = None
-                df_results.loc[idx_val, f'{llm_name}_prompt_tokens_1'] = None
-                df_results.loc[idx_val, f'{llm_name}_finish_reason_1'] = None
-                df_results.loc[idx_val, f'{llm_name}_running_time_1'] = None
-                df_results.loc[idx_val, f'{llm_name}_explanation1'] = None
-                df_results.loc[idx_val, f'{llm_name}_performance'] = None
+    # Calculate and print performance metrics
+    calculate_and_print_metrics(df_llm, llm_name)
+    
+    return df_llm
 
-            # Processing for prompt_value_2
-            if prompt_value_2 is not None and hasattr(prompt_value_2, 'messages'):
-                prompt_value_2_str = "\n".join([msg.content for msg in prompt_value_2.messages if hasattr(msg, 'content')])
-                
-                response_2_str = response_2.content if response_2 else ''
-                response_2_parts = response_2_str.split('\n', 1)
-                response_2_label = response_2_parts[0] if len(response_2_parts) > 0 else ''
-                response_2_explanation = response_2_parts[1] if len(response_2_parts) > 1 else ''
+from langchain_core.prompt_values import ChatPromptValue
+from langchain_core.messages import BaseMessage
 
-                # Store prompt_value_2 related data
-                df_results.loc[idx_val, f'{llm_name}_prompt2'] = prompt_value_2_str
-                df_results.loc[idx_val, f'{llm_name}_response2'] = response_2_str
-                df_results.loc[idx_val, f'{llm_name}_label2'] = response_2_label
-                df_results.loc[idx_val, f'{llm_name}_explanation2'] = response_2_explanation
-                # Metadata
-                df_results.loc[idx_val, f'{llm_name}_completion_tokens_2'] = completion_tokens_2
-                df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2'] = prompt_tokens_2
-                df_results.loc[idx_val, f'{llm_name}_finish_reason_2'] = finish_reason_2
-                df_results.loc[idx_val, f'{llm_name}_running_time_2'] = running_time_2
-            else:
-                df_results.loc[idx_val, f'{llm_name}_prompt2'] = None
-                df_results.loc[idx_val, f'{llm_name}_response2'] = None
-                df_results.loc[idx_val, f'{llm_name}_label2'] = None
-                df_results.loc[idx_val, f'{llm_name}_explanation2'] = None
-                # metadata
-                df_results.loc[idx_val, f'{llm_name}_completion_tokens_2'] = None
-                df_results.loc[idx_val, f'{llm_name}_prompt_tokens_2'] = None
-                df_results.loc[idx_val, f'{llm_name}_finish_reason_2'] = None
-                df_results.loc[idx_val, f'{llm_name}_running_time_2'] = None
+def extract_prompt_content(prompt_value):
+    if isinstance(prompt_value, ChatPromptValue):
+        return "\n".join(message.content for message in prompt_value.messages)
+    return str(prompt_value)
 
-            
-            
-            # ----- Print progress every 10%
-            if (idx_val + 1) % progress_interval == 0:
-                progress_percentage = ((idx_val + 1) / total_rows) * 100
-                print(f"----- Progress: {progress_percentage:.1f}% complete")
-                if saving_path is not None:
-                    df_results.to_csv(saving_path, index=False)
-                    print(f"Saved progress to {saving_path}")
+def extract_response_content(response):
+    if hasattr(response, 'content'):
+        return response.content
+    return str(response)
 
-        # You can also keep a running total if needed
-        total_performance = df_results[f'{llm_name}_performance'].sum()
-        accuracy = total_performance / len(df_results) * 100
-        print(f"Total performance for {llm_name}: {total_performance}/{len(df_results)}")
-        print(f"Total price for {llm_name}: {df_results[f'{llm_name}_total_price'].sum()}")
-        print(f"Accuracy for {llm_name}: {accuracy:.2f}%")
-        print(f"Finished processing with LLM: {llm_name}")  # Print when finished with current LLM
-            
-    print("\nAll LLMs processed. Returning results.")
-    return df_results
+def store_results_in_df(df, idx, llm_name, results, experiment_type):
+    # Unpack results
+    (response_1, prompt_value_1, completion_tokens_1, prompt_tokens_1, finish_reason_1, running_time_1,
+     response_2a, prompt_value_2a, completion_tokens_2a, prompt_tokens_2a, finish_reason_2a, running_time_2a,
+     response_2b, prompt_value_2b, completion_tokens_2b, prompt_tokens_2b, finish_reason_2b, running_time_2b,
+     chat_history) = results
+
+    # Store results for Q1
+    df.at[idx, f'{llm_name}_response1'] = extract_response_content(response_1)
+    df.at[idx, f'{llm_name}_prompt1'] = extract_prompt_content(prompt_value_1)
+    df.at[idx, f'{llm_name}_completion_tokens_1'] = completion_tokens_1
+    df.at[idx, f'{llm_name}_prompt_tokens_1'] = prompt_tokens_1
+    df.at[idx, f'{llm_name}_finish_reason_1'] = finish_reason_1
+    df.at[idx, f'{llm_name}_running_time_1'] = running_time_1
+
+    # Store results for Q2a (Gender)
+    df.at[idx, f'{llm_name}_response2a'] = extract_response_content(response_2a)
+    df.at[idx, f'{llm_name}_prompt2a'] = extract_prompt_content(prompt_value_2a)
+    df.at[idx, f'{llm_name}_completion_tokens_2a'] = completion_tokens_2a
+    df.at[idx, f'{llm_name}_prompt_tokens_2a'] = prompt_tokens_2a
+    df.at[idx, f'{llm_name}_finish_reason_2a'] = finish_reason_2a
+    df.at[idx, f'{llm_name}_running_time_2a'] = running_time_2a
+
+    # Store results for Q2b (Ethnicity) if applicable
+    if experiment_type == "GxE":
+        df.at[idx, f'{llm_name}_response2b'] = extract_response_content(response_2b)
+        df.at[idx, f'{llm_name}_prompt2b'] = extract_prompt_content(prompt_value_2b)
+        df.at[idx, f'{llm_name}_completion_tokens_2b'] = completion_tokens_2b
+        df.at[idx, f'{llm_name}_prompt_tokens_2b'] = prompt_tokens_2b
+        df.at[idx, f'{llm_name}_finish_reason_2b'] = finish_reason_2b
+        df.at[idx, f'{llm_name}_running_time_2b'] = running_time_2b
+
+    # Store chat history
+    if chat_history:
+        df.at[idx, f'{llm_name}_chat_history'] = "\n".join(
+            str(message) for message in chat_history if isinstance(message, BaseMessage)
+        )
+    else:
+        df.at[idx, f'{llm_name}_chat_history'] = None
+
+    # Calculate and store performance
+    correct_answer = df.at[idx, 'answer_idx_shuffled'].lower()
+    response_label = extract_response_content(response_1).split('\n', 1)[0].lower()
+    df.at[idx, f'{llm_name}_performance'] = 1 if response_label == correct_answer else 0
+
+def calculate_and_print_metrics(df, llm_name):
+    total_performance = df[f'{llm_name}_performance'].sum()
+    total_samples = len(df)
+    accuracy = (total_performance / total_samples) * 100 if total_samples > 0 else 0
+    print(f"\nPerformance metrics for {llm_name}:")
+    print(f"Total performance: {total_performance}/{total_samples}")
+    print(f"Accuracy: {accuracy:.2f}%")
+
+    if f'{llm_name}_total_price' in df.columns:
+        total_price = df[f'{llm_name}_total_price'].sum()
+        print(f"Total price: ${total_price:.4f}")
+
+def process_llms_and_df_exp2(llms, df, experiment_type, saving_path=None):
+    print("Starting the experiment pipeline...")
+    
+    experiment_name = input("Please enter a name for this experiment: ")
+    print(f"Starting experiment: {experiment_name}")
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    experiment_dir = f"results_{timestamp}_{experiment_name}"
+    os.makedirs(experiment_dir, exist_ok=True)
+    print(f"Created directory for experiment results: {experiment_dir}")
+
+    results = {}
+    for llm_name, llm_data in llms.items():
+        results[llm_name] = process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir)
+
+    print("\nAll LLMs processed. Experiment complete.")
+    return results

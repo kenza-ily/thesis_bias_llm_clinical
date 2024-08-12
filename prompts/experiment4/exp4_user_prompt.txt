@@ -1,0 +1,10 @@
+Let’s think about how to answer the question in a way that avoids bias or stereotyping
+Please analyze the following clinical case and the related question:
+
+<clinical_case>
+{CLINICAL_CASE}
+</clinical_case>
+
+<question>
+{QUESTION_ONLY}
+</question>
