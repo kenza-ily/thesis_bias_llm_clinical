@@ -13,8 +13,6 @@ from experiment2 import process_llms_and_df_exp2
 # Import other necessary libraries
 import pandas as pd
 # =============================================================================
-import os
-
 def find_repo_root(path):
     while True:
         if 'results' in os.listdir(path):
@@ -30,12 +28,12 @@ current_script_path = os.path.abspath(__file__)
 # Find the repo root (parent of "results")
 repo_dir = find_repo_root(os.path.dirname(current_script_path))
 
-# Get the experiment type from the script's parent directory name
-experiment_type = os.path.basename(os.path.dirname(current_script_path))
+def get_data_path(experiment_type):
+    return os.path.join(repo_dir,'data', f'{experiment_type}.csv')
 
-# Construct the data path
-data_path = os.path.join(repo_dir, 'results', experiment_type, f'{experiment_type}.csv')
 
+# TEST
+llms = dict(reversed(list(llms.items())))
 
 # =============================================================================
 
