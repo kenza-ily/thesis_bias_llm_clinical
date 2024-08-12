@@ -22,6 +22,10 @@ langchain-anthropic
 langchain-huggingface
 openai
 
+# HuggingFace
+transformers
+torch
+huggingface_hub
 
 # OTHER
 # For potential future use
