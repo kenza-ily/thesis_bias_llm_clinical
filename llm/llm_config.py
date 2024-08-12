@@ -6,7 +6,7 @@ def extract_price(variable_name, costs_content):
     match = re.search(pattern, costs_content)
     return float(match.group(1)) / 1e6 if match else None
 
-with open('data/costs.txt', 'r') as file:
+with open('data/config/costs.txt', 'r') as file:
     costs_content = file.read()
 
 llms = {
