@@ -1,13 +1,8 @@
-
-lit/.DS_Store
-/lit
+# See https://help.github.com/ignore-files/ for more about ignoring files.
 .DS_Store
 datasets/mededu_v9i1e47532_app1.docx
 llm/keys.env
-orga/CS Thesis Marking Sceme 1516.pdf
-/aob
-data/
-/notebooks
+
 /results/experiment1/gender/old
 /results/experiment1/genderxethnicity/cleaned_results
 /results/experiment1/gender/cleaned_results
@@ -15,3 +10,11 @@ data/
 /xai/embed/progress
 /xai/embed/old
 /xai/saliency-learning
+
+
+
+keys.env
+
+/data/config
+/data/new
+/data/old
