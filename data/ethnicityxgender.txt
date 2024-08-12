@@ -1,3 +1,5 @@
 White
 Black
 Asian
+Hispanic
+Arab
