@@ -22,11 +22,15 @@ langchain-anthropic
 langchain-huggingface
 openai
 
+
+# Ollama
+langchain_ollama
+langchain_community
+
 # HuggingFace
 transformers
 torch
 huggingface_hub
-
 # OTHER
 # For potential future use
 # scipy

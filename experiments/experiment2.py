@@ -53,8 +53,8 @@ def experiment2_llm_pipeline(llm, case, question, options, experiment_type):
     prompt_value_1 = handle_api_call(prompt_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options})
     if prompt_value_1 is None:
         print("ERROR - Prompt 1: Failed to get a valid response")
-        print(f"Case: {case}")
-        print("Skipping this question.")
+        # print(f"Case: {case}")
+        # print("Skipping this question.")
         return None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, [None, None, None]
 
     start_time_1 = time.time()

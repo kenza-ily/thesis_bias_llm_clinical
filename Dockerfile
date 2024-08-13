@@ -15,6 +15,7 @@ COPY requirements.txt .
 # Upgrade pip and install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt || \
+    pip install langchain-community==0.0.1 || \
     (echo "Failed to install packages. Check your requirements.txt file." && exit 1)
 
 # Download spaCy model
