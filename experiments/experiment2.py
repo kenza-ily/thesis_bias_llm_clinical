@@ -64,7 +64,7 @@ def experiment2_llm_pipeline(llm, case, question, options, experiment_type):
     
     if response_1 is None:
         print("ERROR - Response 1: Failed to get a valid response")
-        print(f"Case: {case}")
+        # print(f"Case: {case}")
         print("Skipping this question.")
         return None, prompt_value_1, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, [None, None, None]
 
