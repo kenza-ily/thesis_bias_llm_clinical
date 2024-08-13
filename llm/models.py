@@ -72,3 +72,21 @@ def get_gemma2_9b():
 # # - optional
 # def get_biomistral_7b():
 #     return load_ollama_model("BioMistral/BioMistral-7B")
+
+# --- 3/Vertex models ---
+
+from langchain_google_vertexai.model_garden import ChatAnthropicVertex
+
+project ="gifted-course-432415-m9"
+location="europe-west1"
+
+def load_anthropic_model(name):
+    return ChatAnthropicVertex(model_name=name, temperature=TEMPERATURE, project=project, location=location)
+
+
+def get_haiku():
+    return load_anthropic_model("claude-3-haiku@20240307")
+
+
+def get_sonnet3_5():
+    return load_anthropic_model("claude-3-5-sonnet@20240620")
