@@ -8,8 +8,8 @@ from llm.models import (
     get_llama3_70b,
     get_llama3_1_8b,
     get_gemma2_2b,
-    get_gemma2_9b,
-    get_biomistral_7b
+    get_gemma2_9b
+    # get_biomistral_7b
 )
 import re
 
@@ -91,12 +91,12 @@ llms = {
         "model": get_gemma2_9b(),
         "price_per_input_token": 0,
         "price_per_output_token": 0
-    },
-    # ===== Biomedical models =====
-    "llm_biomistral_7b": {
-        "model_name": "BioMistral-7B",
-        "model": get_biomistral_7b(),
-        "price_per_input_token": 0,
-        "price_per_output_token": 0
     }
+        # # ===== Biomedical models =====
+        # "llm_biomistral_7b": {
+        #     "model_name": "BioMistral-7B",
+        #     "model": get_biomistral_7b(),
+        #     "price_per_input_token": 0,
+        #     "price_per_output_token": 0
+        # }
 }

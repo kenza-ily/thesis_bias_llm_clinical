@@ -6,6 +6,7 @@ from pathlib import Path
 experiment_dir = Path(__file__).resolve().parent.parent.parent / 'experiments'
 sys.path.append(str(experiment_dir))
 
+
 # Import the necessary functions from experiment2.py
 from llm.llm_config import llms
 from experiment2 import process_llms_and_df_exp2
@@ -62,7 +63,7 @@ def main():
 
     # Run the experiment
     try:
-        results = process_llms_and_df_exp2(llms, df, experiment_type)
+        results = process_llms_and_df_exp2(llms, df, experiment_type,current_script_path)
         print("Experiment completed successfully.")
         
         # You can add additional code here to process or analyze the results if needed
