@@ -50,7 +50,6 @@ def main():
     try:
         data_path=get_data_path(experiment_type)
         df = pd.read_csv(data_path)
-        df=df.head(2)
         print(f"Loaded dataset with {len(df)} rows.")
     except FileNotFoundError:
         print(f"Error: File not found at {data_path}")
