@@ -197,9 +197,13 @@ def process_llms_and_df_fw2(llms, df, experiment_type,repo_dir):
     
     # ----------------- EXPERIMENT SETUP -----------------
     # Experiment number
-    experiment_number = int(input("Enter experiment number (2, 3, or 4): "))
-    if experiment_type not in [2,3,4]:
-        print("Invalid experiment number. Please enter 2,3 or 4.")
+    try:
+        experiment_number = int(input("Enter experiment number (2, 3, or 4): "))
+        if experiment_number not in [2, 3, 4]:
+            print("Invalid experiment number. Please enter 2, 3 or 4.")
+            return
+    except ValueError:
+        print("Please enter a valid integer (2, 3, or 4).")
         return
     
     # Experiment name
