@@ -36,3 +36,4 @@ google-cloud-sdk/
 gifted-*.json
 
 experiments/testenv
+.vscode/settings.json
