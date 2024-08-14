@@ -22,12 +22,12 @@ def get_gpt4o_model():
         temperature=TEMPERATURE
     )
     
-def get_gpt4omini_model():
-    return AzureChatOpenAI(
-        openai_api_version=AZURE_OPENAI_API_VERSION,
-        azure_deployment=AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4omini,
-        temperature=TEMPERATURE
-    )
+# def get_gpt4omini_model():
+#     return AzureChatOpenAI(
+#         openai_api_version=AZURE_OPENAI_API_VERSION,
+#         azure_deployment=AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4omini,
+#         temperature=TEMPERATURE
+#     )
     
 def get_gpt4turbo_model():
     return AzureChatOpenAI(
@@ -48,12 +48,16 @@ def load_ollama_model(model_name):
 )
 # -------
 
+# ----- Mistral -----
+def get_mistral_nemo():
+    return load_ollama_model("mixtral:nemo")
+
 def get_mixtral_8x22b():
     return load_ollama_model("mixtral:8x22b")
 
 def get_mistral_7b():
     return load_ollama_model("mistral:7b")
-
+# ----- Llama -----
 def get_llama3_8b():
     return load_ollama_model("llama3:8b")
 
@@ -63,15 +67,12 @@ def get_llama3_70b():
 def get_llama3_1_8b():
     return load_ollama_model("llama3.1")
 
+# ---- Gemma ----
 def get_gemma2_2b():
     return load_ollama_model("gemma2:2b")
 
 def get_gemma2_9b():
     return load_ollama_model("gemma2")
-
-# # - optional
-# def get_biomistral_7b():
-#     return load_ollama_model("BioMistral/BioMistral-7B")
 
 # --- 3/Vertex models ---
 
@@ -83,10 +84,22 @@ location="europe-west1"
 def load_anthropic_model(name):
     return ChatAnthropicVertex(model_name=name, temperature=TEMPERATURE, project=project, location=location)
 
-
+# ----- Anthropic ----
 def get_haiku():
     return load_anthropic_model("claude-3-haiku@20240307")
 
 
 def get_sonnet3_5():
     return load_anthropic_model("claude-3-5-sonnet@20240620")
+
+# ----- Cohere ----\
+
+# from langchain_google_vertexai.model_garden import CohereChat
+# def load_cohere_model(name):
+#     return CohereChat(model_name=name, temperature=TEMPERATURE, project=project, location=location)
+
+# def get_commandr_plus():
+#     return load_cohere_model
+
+# def get_commandr_plus():
+#     return load_cohere_model
