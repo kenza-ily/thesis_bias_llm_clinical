@@ -15,7 +15,7 @@ llm/keys.env
 
 keys.env
 
-# /data/config
+
 /data/new
 /data/old
 /results/experiment2/old
