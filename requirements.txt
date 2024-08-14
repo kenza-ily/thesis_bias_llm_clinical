@@ -4,7 +4,7 @@ pandas
 beautifulsoup4
 python-dotenv
 AzureOpenAI
-langchain-openai
+
 numpy
 spacy
 matplotlib
@@ -18,9 +18,12 @@ langsmith
 langchain-core
 langchain-cohere
 langchain-mistralai
+langchain-openai
 langchain-anthropic
 langchain-huggingface
 openai
+anthropic[vertex]
+langchain-google-vertexai
 
 
 # Ollama
@@ -38,3 +41,6 @@ huggingface_hub
 
 # Ensure spaCy English model is downloaded
 # Run this after installing requirements: python -m spacy download en_core_web_sm
+
+
+tqdm
