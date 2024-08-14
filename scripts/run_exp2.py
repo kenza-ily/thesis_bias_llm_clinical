@@ -1,37 +1,19 @@
+# --- 1/ Imports
 import sys
 import os
 from pathlib import Path
-
-
-
-# Add the directory containing experiments to the Python path
-experiment_dir = Path(__file__).resolve().parent.parent.parent / 'experiments'
-sys.path.append(str(experiment_dir))
-
-main_dir = Path(__file__).resolve().parent.parent.parent
-sys.path.append(str(main_dir))
-
-llmdir = Path(__file__).resolve().parent.parent.parent / "llm"
-sys.path.append(str(llmdir))
-
-
-print("Looking for modules in ", sys.path)
-
-# exit(0)
-
-from llm.models import get_haiku
-# from llm.models import (
-#     get_haiku
-#     # get_biomistral_7b
-# )
-
-# Import the necessary functions from experiment2.py
-from llm.llm_config import llms
-from experiment2 import process_llms_and_df_exp2
-
-# Import other necessary libraries
 import pandas as pd
-# =============================================================================
+from config.repo_dir import get_repo_dir
+from llm.llm_config import llms
+from frameworks.fw2 import process_llms_and_df_fw2
+
+
+# --- 2/ Directories
+
+# Current script path
+current_script_path = os.path.abspath(__file__)
+
+# Repo directory
 def find_repo_root(path):
     while True:
         if 'results' in os.listdir(path):
@@ -40,30 +22,16 @@ def find_repo_root(path):
         if parent == path:  # We've reached the root directory
             raise Exception("Could not find 'results' directory in any parent directory")
         path = parent
-
-# Get the absolute path of the current script
-current_script_path = os.path.abspath(__file__)
-
 # Find the repo root (parent of "results")
 repo_dir = find_repo_root(os.path.dirname(current_script_path))
 
+# Data directory
 def get_data_path(experiment_type):
     return os.path.join(repo_dir,'data', f'{experiment_type}.csv')
 
 
-# # TEST
-# llms = {
-#     "llm_haiku": {
-#         "model_name": "claude-3-haiku@20240307",
-#         "model": get_haiku(),
-#         "price_per_input_token":0.25,
-#         "price_per_output_token": 1.25
-#     }
 
-# }
-
-# =============================================================================
-
+# --- 3/ Experiment
 
 def main():
     # Set up the experiment parameters
@@ -93,7 +61,8 @@ def main():
 
     # Run the experiment
     try:
-        results = process_llms_and_df_exp2(llms, df, experiment_type,current_script_path)
+        
+        results = process_llms_and_df_fw2(llms, df, experiment_type,repo_dir)
         print("Experiment completed successfully.")
         
         # You can add additional code here to process or analyze the results if needed
