@@ -232,7 +232,7 @@ def process_llms_and_df_fw2(llms, df, experiment_type,repo_dir):
         # Saving dir
         saving_dir = os.path.join(saving_folder, f"results_exp{experiment_number}_{experiment_type}_{llm_name}.csv")
         # Process the LLM
-        results[llm_name] = process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir,experiment_number,saving_dir)
+        results[llm_name] = process_single_llm(llm_name, llm_data, df, experiment_type,experiment_number,saving_dir)
 
     print("\nAll LLMs processed. Experiment complete.")
     return results
