@@ -31,3 +31,8 @@ google-cloud-sdk/
 **/__pycache__/**
 google-cloud-cli-linux-x86_64.tar.gz
 google-cloud-sdk/
+
+
+gifted-*.json
+
+experiments/testenv
