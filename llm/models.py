@@ -4,16 +4,25 @@ from config.settings import TEMPERATURE
 from langchain_openai import AzureChatOpenAI
 from config.settings import AZURE_OPENAI_API_VERSION, AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3
 from config.settings import AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4o
-from config.settings import AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4omini
+# from config.settings import AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4omini
 from config.settings import AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4turbo
 # -------
 
 def get_gpt3_model():
+    print(f"API Version: {AZURE_OPENAI_API_VERSION}")
+    print(f"Deployment: {AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3}")
     return AzureChatOpenAI(
         openai_api_version=AZURE_OPENAI_API_VERSION,
         azure_deployment=AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3,
         temperature=TEMPERATURE
     )
+    
+# def get_gpt3_model():
+#     return AzureChatOpenAI(
+#         openai_api_version=AZURE_OPENAI_API_VERSION,
+#         azure_deployment=AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT3,
+#         temperature=TEMPERATURE
+#     )
     
 def get_gpt4o_model():
     return AzureChatOpenAI(
@@ -77,6 +86,8 @@ def get_gemma2_9b():
 # --- 3/Vertex models ---
 
 from langchain_google_vertexai.model_garden import ChatAnthropicVertex
+from langchain_google_vertexai import ChatVertexAI
+
 
 project ="gifted-course-432415-m9"
 location="europe-west1"
@@ -92,7 +103,13 @@ def get_haiku():
 def get_sonnet3_5():
     return load_anthropic_model("claude-3-5-sonnet@20240620")
 
-# ----- Cohere ----\
+# ----- Gemini ----
+
+def load_gemini_model(name):
+    return ChatVertexAI(model_name=name, temperature=TEMPERATURE)
+
+def get_gemini_3_5_flash():
+    return load_gemini_model("gemini-1.5-flash")
 
 # from langchain_google_vertexai.model_garden import CohereChat
 # def load_cohere_model(name):

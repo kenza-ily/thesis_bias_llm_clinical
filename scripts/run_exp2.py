@@ -1,7 +1,18 @@
-# --- 1/ Imports
 import sys
 import os
 from pathlib import Path
+
+# Add the project root directory to the Python path
+project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
+
+# Now you can import from config
+from config.settings import AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT
+
+os.environ['AZURE_OPENAI_API_KEY'] = AZURE_OPENAI_API_KEY
+os.environ['AZURE_OPENAI_ENDPOINT'] = AZURE_OPENAI_ENDPOINT
+
+# Rest of your imports
 import pandas as pd
 from config.repo_dir import get_repo_dir
 from llm.llm_config import llms
@@ -14,16 +25,8 @@ from frameworks.fw2 import process_llms_and_df_fw2
 current_script_path = os.path.abspath(__file__)
 
 # Repo directory
-def find_repo_root(path):
-    while True:
-        if 'results' in os.listdir(path):
-            return path
-        parent = os.path.dirname(path)
-        if parent == path:  # We've reached the root directory
-            raise Exception("Could not find 'results' directory in any parent directory")
-        path = parent
-# Find the repo root (parent of "results")
-repo_dir = find_repo_root(os.path.dirname(current_script_path))
+
+repo_dir = get_repo_dir()
 
 # Data directory
 def get_data_path(experiment_type):

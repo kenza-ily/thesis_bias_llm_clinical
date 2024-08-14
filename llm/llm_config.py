@@ -12,7 +12,8 @@ from llm.models import (
     get_gemma2_2b,
     get_gemma2_9b,
     get_haiku,
-    get_sonnet3_5
+    get_sonnet3_5,
+    get_gemini_3_5_flash
 )
 import re
 
@@ -120,4 +121,11 @@ llms = {
         "price_per_input_token":0.25,
         "price_per_output_token": 1.25
     },
+    # ---- gemini flash
+    "llm_gemini_3_5_flash": {
+        "model_name": "gemini-3-5-flash",
+        "model": get_gemini_3_5_flash(),
+        "price_per_input_token": 0.25,
+        "price_per_output_token": 1.25
+    }
 }
