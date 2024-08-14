@@ -2,10 +2,28 @@ import sys
 import os
 from pathlib import Path
 
+
+
 # Add the directory containing experiments to the Python path
 experiment_dir = Path(__file__).resolve().parent.parent.parent / 'experiments'
 sys.path.append(str(experiment_dir))
 
+main_dir = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(main_dir))
+
+llmdir = Path(__file__).resolve().parent.parent.parent / "llm"
+sys.path.append(str(llmdir))
+
+
+print("Looking for modules in ", sys.path)
+
+# exit(0)
+
+from llm.models import get_haiku
+# from llm.models import (
+#     get_haiku
+#     # get_biomistral_7b
+# )
 
 # Import the necessary functions from experiment2.py
 from llm.llm_config import llms
@@ -33,23 +51,34 @@ def get_data_path(experiment_type):
     return os.path.join(repo_dir,'data', f'{experiment_type}.csv')
 
 
-# TEST
-llms = dict(reversed(list(llms.items())))
+# # TEST
+# llms = {
+#     "llm_haiku": {
+#         "model_name": "claude-3-haiku@20240307",
+#         "model": get_haiku(),
+#         "price_per_input_token":0.25,
+#         "price_per_output_token": 1.25
+#     }
+
+# }
 
 # =============================================================================
 
 
 def main():
     # Set up the experiment parameters
-    experiment_type = input("Enter experiment type (G or GxE): ").strip().upper()
-    if experiment_type not in ["G", "GXE"]:
+    experiment_type = input("Enter experiment type (G or GxE): ").strip()
+    if experiment_type not in ["G", "GxE"]:
         print("Invalid experiment type. Please enter 'G' or 'GxE'.")
         return
+    
+    print("Load Dataset")
 
     # Load the dataset
     try:
         data_path=get_data_path(experiment_type)
         df = pd.read_csv(data_path)
+        df=df.head(2)
         print(f"Loaded dataset with {len(df)} rows.")
     except FileNotFoundError:
         print(f"Error: File not found at {data_path}")
