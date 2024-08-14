@@ -133,7 +133,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 
-def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_number, saving_dir):
+def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_number, saving_dir, saving_path):
     print(f"\nProcessing with LLM: {llm_name}")
     
     # Create a copy of the dataframe for this LLM
@@ -175,18 +175,14 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_numbe
                 
                 # Save every 10% of total rows
                 if processed_rows % save_interval == 0 or processed_rows == total_rows:
-                    progress_percentage = (processed_rows / total_rows) * 100
-                    temp_save_path = os.path.join(saving_dir, f"{llm_name}_temp_{progress_percentage:.0f}percent.csv")
-                    df_llm.to_csv(temp_save_path, index=False)
-                    print(f"Saved intermediate results ({progress_percentage:.0f}%) for {llm_name} to {temp_save_path}")
+                    df_llm.to_csv(saving_path, index=False)
+                    print(f"Saved results for {llm_name} at row {processed_rows} to {saving_path}")
                 
             except Exception as e:
                 print(f"Error processing row {idx} for {llm_name}: {str(e)}")
 
-    # Save final results
-    final_save_path = os.path.join(saving_dir, f"{llm_name}_final.csv")
-    df_llm.to_csv(final_save_path, index=False)
-    print(f"Saved final results for {llm_name} to {final_save_path}")
+    # Final save is already done in the loop, so we don't need to do it again here
+    print(f"Completed processing for {llm_name}. Final results saved to {saving_path}")
     
     return df_llm
 
@@ -210,29 +206,29 @@ def process_llms_and_df_fw2(llms, df, experiment_type,repo_dir):
     experiment_name = input("Please enter a name for this experiment: ")
     
     # Print
-    print(f"Starting experiment: #{experiment_number}, dataset {experiment_name}")
+    print(f"Starting experiment: #{experiment_number}, Experiment name: {experiment_name}")
     
     # ----------------- RESULTS DIRECTORY -----------------
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     # Saving folder
     def create_saving_folder(experiment_number):
-        saving_folder = os.path.join(repo_dir, "results", "fw2",f"exp{experiment_number}", experiment_name)
+        saving_folder = os.path.join(repo_dir, "results", "fw2",f"exp{experiment_number}", f"{timestamp}_{experiment_name}")
         if not os.path.exists(saving_folder):
             os.makedirs(saving_folder)
         return saving_folder
     saving_folder=create_saving_folder(experiment_number)
     
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    experiment_dir = f"results_{timestamp}_{experiment_name}"
-    os.makedirs(os.path.experiment_dir, exist_ok=True)
-    print(f"Created directory for experiment results: {experiment_dir}")
+    
+    
 
     results = {}
     for llm_name, llm_data in llms.items():
-        # Saving dir
-        saving_dir = os.path.join(saving_folder, f"results_exp{experiment_number}_{experiment_type}_{llm_name}.csv")
+        # Saving path
+        saving_dir = os.path.join(saving_folder)
+        os.makedirs(saving_dir, exist_ok=True)
+        file_name = f"results_exp{experiment_number}_{experiment_type}_{llm_name}.csv"
+        saving_path = os.path.join(saving_dir, file_name)
         # Process the LLM
-        results[llm_name] = process_single_llm(llm_name, llm_data, df, experiment_type,experiment_number,saving_dir)
-
+        results[llm_name] = process_single_llm(llm_name, llm_data, df, experiment_type, experiment_number, saving_dir, saving_path)
     print("\nAll LLMs processed. Experiment complete.")
     return results
