@@ -129,7 +129,11 @@ def fw2(llm, case, question, options, experiment_type,experiment_number):
 
 
 # ====== PROCESSING
-def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_number,saving_dir):
+import os
+from concurrent.futures import ThreadPoolExecutor
+from tqdm import tqdm
+
+def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_number, saving_dir):
     print(f"\nProcessing with LLM: {llm_name}")
     
     # Create a copy of the dataframe for this LLM
@@ -140,6 +144,10 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_numbe
     if llm_model is None:
         print(f"Warning: No model found for {llm_name}. Skipping this LLM.")
         return None
+
+    total_rows = len(df_llm)
+    save_interval = max(1, total_rows // 10)  # Save every 10% of rows, minimum 1
+    processed_rows = 0
 
     # Use ThreadPoolExecutor for parallel processing
     with ThreadPoolExecutor(max_workers=5) as executor:
@@ -155,19 +163,30 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_numbe
                 experiment_number
             )
             futures.append((idx, future))
-            
 
         # Process results as they complete
-        for idx, future in tqdm(futures, total=len(df_llm), desc=f"Processing {llm_name}"):
+        for idx, future in tqdm(futures, total=total_rows, desc=f"Processing {llm_name}"):
             try:
                 results = future.result()
                 # Store results in df_llm
                 store_results_in_df(df_llm, idx, llm_name, results, experiment_type)
+                
+                processed_rows += 1
+                
+                # Save every 10% of total rows
+                if processed_rows % save_interval == 0 or processed_rows == total_rows:
+                    progress_percentage = (processed_rows / total_rows) * 100
+                    temp_save_path = os.path.join(saving_dir, f"{llm_name}_temp_{progress_percentage:.0f}percent.csv")
+                    df_llm.to_csv(temp_save_path, index=False)
+                    print(f"Saved intermediate results ({progress_percentage:.0f}%) for {llm_name} to {temp_save_path}")
+                
             except Exception as e:
                 print(f"Error processing row {idx} for {llm_name}: {str(e)}")
 
-    df_llm.to_csv(saving_dir, index=False)
-    print(f"Saved results for {llm_name} to {save_path}")
+    # Save final results
+    final_save_path = os.path.join(saving_dir, f"{llm_name}_final.csv")
+    df_llm.to_csv(final_save_path, index=False)
+    print(f"Saved final results for {llm_name} to {final_save_path}")
     
     return df_llm
 
