@@ -3,17 +3,18 @@
 datasets/mededu_v9i1e47532_app1.docx
 llm/keys.env
 
-/results/experiment1/gender/old
-/results/experiment1/genderxethnicity/cleaned_results
-/results/experiment1/gender/cleaned_results
-/results/experiment1/genderxethnicity/old
+/results/fw1/gender/old
+/results/fw1/genderxethnicity/cleaned_results
+/results/fw1/gender/cleaned_results
+/results/fw1/genderxethnicity/old
+/results/fw2/old
 /xai/embed/progress
 /xai/embed/old
 /xai/saliency-learning
 
 keys.env
 
-
+results/old
 /data/new
 /data/old
 /results/experiment2/old
@@ -27,13 +28,14 @@ google-cloud-sdk/
 
 *.pyc
 .venv/
-
+results/tests
 **/__pycache__/**
 google-cloud-cli-linux-x86_64.tar.gz
 google-cloud-sdk/
 
 
 gifted-*.json
-
+frameworks/testenv/
 experiments/testenv
 .vscode/settings.json
+

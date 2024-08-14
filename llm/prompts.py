@@ -17,4 +17,11 @@ exp1_specific_question = load_prompt('experiment1', 'exp1_specific_question.txt'
 # Experiment 2
 exp2_system_prompt = load_prompt('experiment2', 'exp2_system_prompt.txt')
 exp2_user_prompt = load_prompt('experiment2', 'exp2_user_prompt.txt')
-exp2_specific_question = load_prompt('experiment2', 'exp2_specific_question.txt')
+
+# Experiment 3
+exp3_system_prompt = load_prompt('experiment3', 'exp3_system_prompt.txt')
+exp3_user_prompt = load_prompt('experiment3', 'exp3_user_prompt.txt')
+
+# Experiment 4
+exp4_system_prompt = load_prompt('experiment4', 'exp4_system_prompt.txt')
+exp4_user_prompt = load_prompt('experiment4', 'exp4_user_prompt.txt')
