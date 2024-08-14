@@ -11,11 +11,20 @@ llm/keys.env
 /xai/embed/old
 /xai/saliency-learning
 
-
-
 keys.env
 
-/data/config
 /data/new
 /data/old
 /results/experiment2/old
+
+experiments/testenv
+
+gifted-course-432415-m9-504767f9536b.json
+
+.venv
+
+
+google-cloud-cli-linux-x86_64.tar.gz
+google-cloud-sdk/
+
+*.pyc
