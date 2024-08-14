@@ -31,9 +31,46 @@ def handle_api_call(func, *args, **kwargs):
             else:
                 print(f"Unexpected error: {str(e)}")
                 return None
+            
+            
+def extract_prompt_content(prompt_value):
+    if isinstance(prompt_value, ChatPromptValue):
+        return "\n".join(message.content for message in prompt_value.messages)
+    return str(prompt_value)
+
+def extract_response_content(response):
+    if hasattr(response, 'content'):
+        return response.content
+    return str(response)
+
+def store_results_in_df(df, idx, llm_name, results, experiment_type):
+    # Unpack results
+    response_1, prompt_value_1,  running_time_1, metadata, chat_history= results
+
+    # Store results for Q1
+    df.at[idx, f'{llm_name}_response1'] = extract_response_content(response_1)
+    df.at[idx, f'{llm_name}_prompt1'] = extract_prompt_content(prompt_value_1)
+    df.at[idx, f'{llm_name}_running_time_1'] = running_time_1
+
+    # Store chat history
+    if chat_history:
+        df.at[idx, f'{llm_name}_chat_history'] = "\n".join(
+            str(message) for message in chat_history if isinstance(message, BaseMessage)
+        )
+    else:
+        df.at[idx, f'{llm_name}_chat_history'] = None
+
+    # Calculate and store performance
+    correct_answer = df.at[idx, 'answer_idx_shuffled'].lower()
+    response_label = extract_response_content(response_1).split('\n', 1)[0].lower()
+    df.at[idx, f'{llm_name}_performance'] = 1 if response_label == correct_answer else 0
+
 
 # ---- 3/ Experiment pipeline
-def experiment2_llm_pipeline(llm, case, question, options, experiment_type,experiment_number):
+
+# ====== FRAMEWORK
+
+def fw2(llm, case, question, options, experiment_type,experiment_number):
     # Debugging
     if llm is None:
         raise ValueError("LLM model is None. Please ensure a valid model is provided.")
@@ -84,13 +121,15 @@ def experiment2_llm_pipeline(llm, case, question, options, experiment_type,exper
 
     # metadata
     metadata = response_1.response_metadata
-
-
-
-    # ====== RETURN
+    if metadata is None:
+        metadata = {}
+        
     return response_1, prompt_value_1,  running_time_1, metadata, chat_history
 
-def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir,experiment_number):
+
+
+# ====== PROCESSING
+def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_number,saving_dir):
     print(f"\nProcessing with LLM: {llm_name}")
     
     # Create a copy of the dataframe for this LLM
@@ -107,7 +146,7 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir,e
         futures = []
         for idx, row in df_llm.iterrows():
             future = executor.submit(
-                experiment2_llm_pipeline,
+                fw2,
                 llm_model,
                 row['case'],
                 row['normalized_question'],
@@ -126,73 +165,51 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir,e
                 store_results_in_df(df_llm, idx, llm_name, results, experiment_type)
             except Exception as e:
                 print(f"Error processing row {idx} for {llm_name}: {str(e)}")
-    # Save results
-    save_path = os.path.join(experiment_dir, f"exp2_{experiment_type}_{llm_name}.csv")
-    df_llm.to_csv(save_path, index=False)
+
+    df_llm.to_csv(saving_dir, index=False)
     print(f"Saved results for {llm_name} to {save_path}")
     
     return df_llm
 
-from langchain_core.prompt_values import ChatPromptValue
-from langchain_core.messages import BaseMessage
+# ====== MAIN PIPELINE
 
-def extract_prompt_content(prompt_value):
-    if isinstance(prompt_value, ChatPromptValue):
-        return "\n".join(message.content for message in prompt_value.messages)
-    return str(prompt_value)
-
-def extract_response_content(response):
-    if hasattr(response, 'content'):
-        return response.content
-    return str(response)
-
-def store_results_in_df(df, idx, llm_name, results, experiment_type):
-    # Unpack results
-    response_1, prompt_value_1,  running_time_1, metadata, chat_history= results
-
-    # Store results for Q1
-    df.at[idx, f'{llm_name}_response1'] = extract_response_content(response_1)
-    df.at[idx, f'{llm_name}_prompt1'] = extract_prompt_content(prompt_value_1)
-    df.at[idx, f'{llm_name}_running_time_1'] = running_time_1
-
-    # Store chat history
-    if chat_history:
-        df.at[idx, f'{llm_name}_chat_history'] = "\n".join(
-            str(message) for message in chat_history if isinstance(message, BaseMessage)
-        )
-    else:
-        df.at[idx, f'{llm_name}_chat_history'] = None
-
-    # Calculate and store performance
-    correct_answer = df.at[idx, 'answer_idx_shuffled'].lower()
-    response_label = extract_response_content(response_1).split('\n', 1)[0].lower()
-    df.at[idx, f'{llm_name}_performance'] = 1 if response_label == correct_answer else 0
-
-
-
-
-def process_llms_and_df_exp2(llms, df, experiment_type, saving_path=None):
+def process_llms_and_df_fw2(llms, df, experiment_type,repo_dir):
     print("Starting the experiment pipeline...")
     
+    # ----------------- EXPERIMENT SETUP -----------------
     # Experiment number
     experiment_number = int(input("Enter experiment number (2, 3, or 4): "))
     if experiment_type not in [2,3,4]:
         print("Invalid experiment number. Please enter 2,3 or 4.")
         return
     
-    
     # Experiment name
     experiment_name = input("Please enter a name for this experiment: ")
-    print(f"Starting experiment: {experiment_name}")
+    
+    # Print
+    print(f"Starting experiment: #{experiment_number}, dataset {experiment_name}")
+    
+    # ----------------- RESULTS DIRECTORY -----------------
+    # Saving folder
+    def create_saving_folder(experiment_number):
+        saving_folder = os.path.join(repo_dir, "results", "fw2",f"exp{experiment_number}", experiment_name)
+        if not os.path.exists(saving_folder):
+            os.makedirs(saving_folder)
+        return saving_folder
+    saving_folder=create_saving_folder(experiment_number)
+    
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     experiment_dir = f"results_{timestamp}_{experiment_name}"
-    os.makedirs(experiment_dir, exist_ok=True)
+    os.makedirs(os.path.experiment_dir, exist_ok=True)
     print(f"Created directory for experiment results: {experiment_dir}")
 
     results = {}
     for llm_name, llm_data in llms.items():
-        results[llm_name] = process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir,experiment_number)
+        # Saving dir
+        saving_dir = os.path.join(saving_folder, f"results_exp{experiment_number}_{experiment_type}_{llm_name}.csv")
+        # Process the LLM
+        results[llm_name] = process_single_llm(llm_name, llm_data, df, experiment_type, experiment_dir,experiment_number,saving_dir)
 
     print("\nAll LLMs processed. Experiment complete.")
     return results
