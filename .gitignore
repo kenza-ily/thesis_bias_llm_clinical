@@ -15,7 +15,18 @@ llm/keys.env
 
 keys.env
 
-/data/config
+# /data/config
 /data/new
 /data/old
 /results/experiment2/old
+
+
+experiments/testenv
+
+gifted-course-432415-m9-504767f9536b.json
+
+.venv/
+
+**/__pycache__/**
+google-cloud-cli-linux-x86_64.tar.gz
+google-cloud-sdk/
