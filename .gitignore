@@ -19,13 +19,13 @@ results/old
 /data/old
 /results/experiment2/old
 
-
+llm/test.ipynb
 .venv
-
-
+results/fw2/analysis.ipynb
+xai/embed/extract.ipynb
 google-cloud-cli-linux-x86_64.tar.gz
 google-cloud-sdk/
-
+*_test/
 *.pyc
 .venv/
 results/tests
