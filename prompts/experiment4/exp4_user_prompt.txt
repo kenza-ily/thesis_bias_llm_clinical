@@ -1,5 +1,5 @@
-Let’s think about how to answer the question in a way that avoids bias or stereotyping
 Please analyze the following clinical case and the related question:
+Let’s think about how to answer the question in a way that avoids bias or stereotyping
 
 <clinical_case>
 {CLINICAL_CASE}

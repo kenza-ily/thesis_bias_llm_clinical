@@ -1,13 +1,7 @@
 import sys
 import os
 from pathlib import Path
-# ------- 0/ Parsing
 import argparse
-parser = argparse.ArgumentParser(description="Run experiments with LLMs")
-parser.add_argument("experiment_type", choices=["G", "GxE"], help="Type of experiment (G or GxE)")
-parser.add_argument("experiment_number", type=int, choices=[2, 3, 4], help="Experiment number (2, 3, or 4)")
-parser.add_argument("experiment_name", help="Name of the experiment")
-args = parser.parse_args()
 
 # Add the project root directory to the Python path
 project_root = Path(__file__).resolve().parent.parent
@@ -44,10 +38,28 @@ def get_data_path(experiment_type):
 # --- 3/ Experiment
 
 def main():
+
+    
+    
     # Set up the experiment parameters
+    parser = argparse.ArgumentParser(description="Run experiments with LLMs")
+    parser.add_argument("experiment_type", choices=["G", "GxE"], help="Type of experiment (G or GxE)")
+    parser.add_argument("experiment_number", type=int, choices=[2, 3, 4], help="Experiment number (2, 3, or 4)")
+    parser.add_argument("experiment_name", help="Name of the experiment")
+    parser.add_argument("llm_type", help="Type of LLM to use")
+
+    args = parser.parse_args()
+
     experiment_type = args.experiment_type
     experiment_number = args.experiment_number
     experiment_name = args.experiment_name
+    llm_type = args.llm_type
+    
+    print("Imported llms:", llms)  # Debugging line
+    
+    filtered_llms = {key: value for key, value in llms.items() if value.get('type') == llm_type}
+    print("Filtered llms:", filtered_llms) 
+    
     
     print("Load Dataset")
     # Load the dataset
@@ -67,7 +79,7 @@ def main():
 
     # Run the experiment
     try:
-        results = process_llms_and_df_fw2(llms, df, experiment_type, repo_dir, experiment_number, experiment_name)
+        results = process_llms_and_df_fw2(filtered_llms, df, experiment_type, repo_dir, experiment_number, experiment_name)
         print("Experiment completed successfully.")
     except Exception as e:
         print(f"An error occurred during the experiment: {str(e)}")

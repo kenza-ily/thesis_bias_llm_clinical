@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#$ -l mem=1G
+#$ -l mem=10G
 #$ -l h_rt=20:00:00
 #$ -j y
 #$ -l gpu=2
@@ -12,8 +12,9 @@ echo "START"
 module load python3/recommended
 echo "loaded python"
 # Activate the environment
-source /home/ucabkbe/bias_llm_clinical_challenge/new_venv
+source /home/ucabkbe/bias_llm_clinical_challenge/new_venv/bin/activate
 echo "Environment activated"
+cd /home/ucabkbe/bias_llm_clinical_challenge/
 # Start the server
 echo "OLLAMA"
 echo "Ollama serving"
@@ -30,6 +31,6 @@ ollama pull gemma2:2b
 ollama pull gemma2
 echo "Running the script"
 # ! HYPERPARAMETERS
-python /home/ucabkbe/bias_llm_clinical_challenge/scripts/run_exp2.py GxE 2 "test0_cluster"
+python scripts/run_exp2.py GxE 2 "test0_cluster" "open"
 echo "Script running done"
 echo "END"
