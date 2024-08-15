@@ -131,7 +131,6 @@ def fw2(llm, case, question, options, experiment_type,experiment_number):
 # ====== PROCESSING
 import os
 from concurrent.futures import ThreadPoolExecutor
-from tqdm import tqdm
 
 def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_number, saving_dir, saving_path):
     print(f"\nProcessing with LLM: {llm_name}")
