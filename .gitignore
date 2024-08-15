@@ -43,3 +43,4 @@ datasets/mededu_v9i1e47532_app1.docx
 llm/test.ipynb
 xai/embed/extract.ipynb
 
+xai/embed/extract_embed.ipynb
