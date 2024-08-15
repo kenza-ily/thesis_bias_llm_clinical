@@ -59,7 +59,7 @@ def load_ollama_model(model_name):
 
 # ----- Mistral -----
 def get_mistral_nemo():
-    return load_ollama_model("mixtral:nemo")
+    return load_ollama_model("mistral:nemo")
 
 def get_mixtral_8x22b():
     return load_ollama_model("mixtral:8x22b")
