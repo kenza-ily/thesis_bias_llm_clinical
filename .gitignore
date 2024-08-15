@@ -1,41 +1,45 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
-.DS_Store
-datasets/mededu_v9i1e47532_app1.docx
-llm/keys.env
 
+
+# --- 1/ Security
+llm/keys.env
+.env
+
+
+# --- 2/ Cleaning
+.DS_Store
+.venv
+google-cloud-cli-linux-x86_64.tar.gz
+google-cloud-sdk/
+*.pyc
+**/__pycache__/**
+new_venv
+gifted-*.json
+frameworks/testenv/
+.vscode/settings.json
+
+# --- 3/ Data
+# ----------- 3.1/ Raw data
+/data/new
+/data/old
+
+# ----------- 3.2/ Results data
 /results/fw1/gender/old
 /results/fw1/genderxethnicity/cleaned_results
 /results/fw1/gender/cleaned_results
 /results/fw1/genderxethnicity/old
 /results/fw2/old
+/results/experiment2/old
+results/old
+results/fw2/analysis.ipynb
+*_test/
+results/tests
+
+# --- 4/ Experiments
 /xai/embed/progress
 /xai/embed/old
 /xai/saliency-learning
-
-keys.env
-
-results/old
-/data/new
-/data/old
-/results/experiment2/old
-
+datasets/mededu_v9i1e47532_app1.docx
 llm/test.ipynb
-.venv
-results/fw2/analysis.ipynb
 xai/embed/extract.ipynb
-google-cloud-cli-linux-x86_64.tar.gz
-google-cloud-sdk/
-*_test/
-*.pyc
-.venv/
-results/tests
-**/__pycache__/**
-google-cloud-cli-linux-x86_64.tar.gz
-google-cloud-sdk/
-new_venv
-
-gifted-*.json
-frameworks/testenv/
-experiments/testenv
-.vscode/settings.json
 
