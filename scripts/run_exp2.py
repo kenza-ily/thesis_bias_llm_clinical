@@ -1,6 +1,13 @@
 import sys
 import os
 from pathlib import Path
+# ------- 0/ Parsing
+import argparse
+parser = argparse.ArgumentParser(description="Run experiments with LLMs")
+parser.add_argument("experiment_type", choices=["G", "GxE"], help="Type of experiment (G or GxE)")
+parser.add_argument("experiment_number", type=int, choices=[2, 3, 4], help="Experiment number (2, 3, or 4)")
+parser.add_argument("experiment_name", help="Name of the experiment")
+args = parser.parse_args()
 
 # Add the project root directory to the Python path
 project_root = Path(__file__).resolve().parent.parent
@@ -38,17 +45,14 @@ def get_data_path(experiment_type):
 
 def main():
     # Set up the experiment parameters
-    experiment_type = input("Enter experiment type (G or GxE): ").strip()
-    if experiment_type not in ["G", "GxE"]:
-        print("Invalid experiment type. Please enter 'G' or 'GxE'.")
-        return
-    
+    experiment_type = args.experiment_type
+    experiment_number = args.experiment_number
+    experiment_name = args.experiment_name
     
     print("Load Dataset")
-
     # Load the dataset
     try:
-        data_path=get_data_path(experiment_type)
+        data_path = get_data_path(experiment_type)
         df = pd.read_csv(data_path)
         print(f"Loaded dataset with {len(df)} rows.")
     except FileNotFoundError:
@@ -63,12 +67,8 @@ def main():
 
     # Run the experiment
     try:
-        
-        results = process_llms_and_df_fw2(llms, df, experiment_type,repo_dir)
+        results = process_llms_and_df_fw2(llms, df, experiment_type, repo_dir, experiment_number, experiment_name)
         print("Experiment completed successfully.")
-        
-        # You can add additional code here to process or analyze the results if needed
-        
     except Exception as e:
         print(f"An error occurred during the experiment: {str(e)}")
 

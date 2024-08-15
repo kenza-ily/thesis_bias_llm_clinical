@@ -188,24 +188,7 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_numbe
 
 # ====== MAIN PIPELINE
 
-def process_llms_and_df_fw2(llms, df, experiment_type,repo_dir):
-    print("Starting the experiment pipeline...")
-    
-    # ----------------- EXPERIMENT SETUP -----------------
-    # Experiment number
-    try:
-        experiment_number = int(input("Enter experiment number (2, 3, or 4): "))
-        if experiment_number not in [2, 3, 4]:
-            print("Invalid experiment number. Please enter 2, 3 or 4.")
-            return
-    except ValueError:
-        print("Please enter a valid integer (2, 3, or 4).")
-        return
-    
-    # Experiment name
-    experiment_name = input("Please enter a name for this experiment: ")
-    
-    # Print
+def process_llms_and_df_fw2(llms, df, experiment_type,repo_dir,experiment_number, experiment_name):
     print(f"Starting experiment: #{experiment_number}, Experiment name: {experiment_name}")
     
     # ----------------- RESULTS DIRECTORY -----------------
