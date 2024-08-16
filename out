@@ -1,1 +1,1 @@
-Error: listen tcp 127.0.0.1:11434: bind: address already in use
+/var/opt/sge/node-l00a-003/job_scripts/5495: line 21: ollama: command not found
