@@ -7,3 +7,7 @@ Please analyze the following clinical case and the related question:
 <question>
 {QUESTION}
 </question>
+
+<options>
+{OPTIONS}
+</options>
