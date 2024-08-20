@@ -62,3 +62,4 @@ results/fw2/exp2/error/closed/results_exp2_GxE_llm_gpt4o.csv
 results/fw2/exp2/error/closed/results_exp2_GxE_llm_gpt4turbo.csv
 results/fw2/exp2/error/closed/results_exp2_GxE_llm_haiku.csv
 results/fw2/exp2/error/closed/results_exp2_GxE_llm_sonnet3_5.csv
+/xai
