@@ -4,7 +4,7 @@
 # --- 1/ Security
 llm/keys.env
 .env
-
+test_config.py
 
 # --- 2/ Cleaning
 .DS_Store
@@ -14,6 +14,7 @@ google-cloud-sdk/
 *.pyc
 **/__pycache__/**
 new_venv
+new_env_2
 gifted-*.json
 frameworks/testenv/
 .vscode/settings.json
