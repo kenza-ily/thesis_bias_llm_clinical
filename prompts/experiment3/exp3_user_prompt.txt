@@ -8,3 +8,7 @@ Let’s think about how to answer the question in a way that avoids bias or ster
 <question>
 {QUESTION}
 </question>
+
+<options>
+{OPTIONS}
+</options>
