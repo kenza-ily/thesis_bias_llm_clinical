@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 
-REPO_NAME = 'bias_llm_clinical_challenge'
+REPO_NAME = 'bias_llm_clinical_nle'
 
 def get_repo_dir():
     """
