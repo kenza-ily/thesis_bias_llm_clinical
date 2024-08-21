@@ -68,3 +68,5 @@ results/fw2/exp2/error/closed/results_exp2_GxE_llm_gpt4turbo.csv
 results/fw2/exp2/error/closed/results_exp2_GxE_llm_haiku.csv
 results/fw2/exp2/error/closed/results_exp2_GxE_llm_sonnet3_5.csv
 /xai
+data/ft/GxE_test.csv
+data/ft/GxE_train.csv
