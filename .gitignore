@@ -2,6 +2,7 @@
 
 
 # --- 1/ Security
+new_env
 llm/keys.env
 .env
 test_config.py
@@ -14,6 +15,7 @@ google-cloud-sdk/
 *.pyc
 **/__pycache__/**
 new_venv
+new_env
 new_env_2
 gifted-*.json
 frameworks/testenv/
@@ -23,7 +25,8 @@ frameworks/testenv/
 # ----------- 3.1/ Raw data
 /data/new
 /data/old
-
+results/fw2/exp2/old
+results
 # ----------- 3.2/ Results data
 /results/fw1/gender/old
 /results/fw1/genderxethnicity/cleaned_results
