@@ -27,7 +27,7 @@ frameworks/testenv/
 /data/old
 results/fw2/exp2/old
 results/data/ft
-/results/*
+# /results/*
 /results_analysis/*
 # ----------- 3.2/ Results data
 /results/fw1/gender/old
@@ -39,6 +39,7 @@ results/data/ft
 results/old
 results/fw2/analysis.ipynb
 *_test/
+results/tests
 results/tests
 
 # --- 4/ Experiments
