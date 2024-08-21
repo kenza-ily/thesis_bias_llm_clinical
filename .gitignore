@@ -26,7 +26,9 @@ frameworks/testenv/
 /data/new
 /data/old
 results/fw2/exp2/old
-results
+results/data/ft
+/results/*
+/results_analysis/*
 # ----------- 3.2/ Results data
 /results/fw1/gender/old
 /results/fw1/genderxethnicity/cleaned_results
@@ -38,7 +40,7 @@ results/old
 results/fw2/analysis.ipynb
 *_test/
 results/tests
-results/tests
+
 # --- 4/ Experiments
 /xai/embed/progress
 /xai/embed/old
