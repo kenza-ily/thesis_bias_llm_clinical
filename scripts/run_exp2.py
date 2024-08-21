@@ -34,7 +34,6 @@ def get_data_path(experiment_type):
     return os.path.join(repo_dir,'data', f'{experiment_type}.csv')
 
 
-
 # --- 3/ Experiment
 
 def main():
@@ -59,6 +58,8 @@ def main():
     
     filtered_llms = {key: value for key, value in llms.items() if value.get('type') == llm_type}
     print("Filtered llms:", filtered_llms) 
+    
+   
     
     
     print("Load Dataset")
