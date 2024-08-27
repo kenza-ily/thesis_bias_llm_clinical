@@ -1,0 +1,14 @@
+Loading python3/recommended
+  Loading requirement: python/3.9.10 openblas/0.3.7-serial/gnu-4.9.2 python3/3.9
+START
+Loaded Python
+Environment activated
+2024/08/25 12:24:12 routes.go:1123: INFO server config env="map[CUDA_VISIBLE_DEVICES: GPU_DEVICE_ORDINAL: HIP_VISIBLE_DEVICES: HSA_OVERRIDE_GFX_VERSION: OLLAMA_DEBUG:false OLLAMA_FLASH_ATTENTION:false OLLAMA_HOST:http://127.0.0.1:11434 OLLAMA_INTEL_GPU:false OLLAMA_KEEP_ALIVE:5m0s OLLAMA_LLM_LIBRARY: OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MODELS:/home/ucabkbe/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NUM_PARALLEL:0 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://*] OLLAMA_RUNNERS_DIR: OLLAMA_SCHED_SPREAD:false OLLAMA_TMPDIR: ROCR_VISIBLE_DEVICES:]"
+time=2024-08-25T12:24:12.791+01:00 level=INFO source=images.go:782 msg="total blobs: 0"
+time=2024-08-25T12:24:12.804+01:00 level=INFO source=images.go:790 msg="total unused blobs removed: 0"
+time=2024-08-25T12:24:12.826+01:00 level=INFO source=routes.go:1170 msg="Listening on 127.0.0.1:11434 (version 0.3.5)"
+time=2024-08-25T12:24:12.833+01:00 level=INFO source=payload.go:30 msg="extracting embedded files" dir=/tmpdir/job/53600.undefined/ollama3457547695/runners
+time=2024-08-25T12:24:31.451+01:00 level=INFO source=payload.go:44 msg="Dynamic LLM libraries [rocm_v60102 cpu cpu_avx cpu_avx2 cuda_v11]"
+time=2024-08-25T12:24:31.451+01:00 level=INFO source=gpu.go:204 msg="looking for compatible GPUs"
+time=2024-08-25T12:24:33.231+01:00 level=INFO source=types.go:105 msg="inference compute" id=GPU-2bdf3996-f668-9bd8-d1e1-f7c6f2565fdc library=cuda compute=7.0 driver=12.2 name="Tesla V100-PCIE-32GB" total="31.7 GiB" available="31.4 GiB"
+time=2024-08-25T12:24:33.231+01:00 level=INFO source=types.go:105 msg="inference compute" id=GPU-aa1db9a5-bfbe-ff77-663c-696b2a01bb45 library=cuda compute=7.0 driver=12.2 name="Tesla V100-PCIE-32GB" total="31.7 GiB" available="31.4 GiB"

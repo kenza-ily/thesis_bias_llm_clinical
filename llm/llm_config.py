@@ -65,11 +65,11 @@ llms = {
         "model": get_mistral_nemo(),
         "type":'open'
     },
-    "llm_mixtral_8x22b": {
-        "model_name": "Mixtral-8x22B",
-        "model": get_mixtral_8x22b(),
-        "type":'open'
-    },
+    # "llm_mixtral_8x22b": {
+    #     "model_name": "Mixtral-8x22B",
+    #     "model": get_mixtral_8x22b(),
+    #     "type":'open'
+    # },
     "llm_mistral_7b": {
         "model_name": "mistral-7b",
         "model": get_mistral_7b(),
@@ -81,11 +81,11 @@ llms = {
         "model": get_llama3_8b(),
         "type":'open'
     },
-    "llm_llama3_70b": {
-        "model_name": "llama3_70b",
-        "model": get_llama3_70b(),
-        "type":'open'
-    },
+    # "llm_llama3_70b": {
+    #     "model_name": "llama3_70b",
+    #     "model": get_llama3_70b(),
+    #     "type":'open'
+    # },
     "llm_llama3_1_8b": {
         "model_name": "llama3_1_8b",
         "model": get_llama3_1_8b(),
