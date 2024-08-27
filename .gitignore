@@ -29,6 +29,7 @@ results/fw2/exp2/old
 results/data/ft
 # /results/*
 /results_analysis/*
+data/ft
 # ----------- 3.2/ Results data
 /results/fw1/gender/old
 /results/fw1/genderxethnicity/cleaned_results
