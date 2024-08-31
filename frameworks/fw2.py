@@ -10,7 +10,7 @@ from langchain_core.prompt_values import ChatPromptValue
 from langchain_core.messages import BaseMessage
 from langchain_core.prompts import ChatPromptTemplate
 
-from llm.prompts import exp2_system_prompt, exp2_user_prompt, exp3_system_prompt, exp3_user_prompt #, exp4_system_prompt, exp4_user_prompt
+from llm.prompts import exp2_system_prompt, exp2_user_prompt, exp3_system_prompt, exp3_user_prompt, exp4_system_prompt, exp4_user_prompt
 
 # ---- 2/ Helper functions
 def handle_api_call(func, *args, **kwargs):

@@ -23,5 +23,5 @@ exp3_system_prompt = load_prompt('experiment3', 'exp3_system_prompt.txt')
 exp3_user_prompt = load_prompt('experiment3', 'exp3_user_prompt.txt')
 
 # # Experiment 4
-# exp4_system_prompt = load_prompt('experiment4', 'exp4_system_prompt.txt')
-# exp4_user_prompt = load_prompt('experiment4', 'exp4_user_prompt.txt')
+exp4_system_prompt = load_prompt('experiment4', 'exp4_system_prompt.txt')
+exp4_user_prompt = load_prompt('experiment4', 'exp4_user_prompt.txt')
