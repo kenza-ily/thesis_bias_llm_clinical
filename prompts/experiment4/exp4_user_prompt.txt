@@ -6,7 +6,7 @@ Let’s think about how to answer the question in a way that avoids bias or ster
 </clinical_case>
 
 <question>
-{QUESTION_ONLY}
+{QUESTION}
 </question>
 
 <options>
