@@ -76,17 +76,19 @@ def fw2(llm, case, question, options, experiment_type,experiment_number):
         raise ValueError("LLM model is None. Please ensure a valid model is provided.")
       
     # --- 1. Prompts 
-    if experiment_number == 2:
-        system_prompt = exp2_system_prompt
-        user_prompt = exp2_user_prompt
-    elif experiment_number == 3:
-        system_prompt = exp3_system_prompt
-        user_prompt = exp3_user_prompt
-    elif experiment_number == 4:
-        system_prompt = exp4_system_prompt
-        user_prompt = exp4_user_prompt
+    if experiment_number == 5:
+        system_prompt = exp5_system_prompt
+        user_prompt = exp5_user_prompt
     else:
         raise ValueError("Invalid experiment number. Please provide a valid experiment number.")
+    # elif experiment_number == 3:
+    #     system_prompt = exp3_system_prompt
+    #     user_prompt = exp3_user_prompt
+    # elif experiment_number == 4:
+    #     system_prompt = exp4_system_prompt
+    #     user_prompt = exp4_user_prompt
+    # else:
+    #     raise ValueError("Invalid experiment number. Please provide a valid experiment number.")
   
     # --- 2. Initialisation
     chat_history = []
@@ -99,7 +101,7 @@ def fw2(llm, case, question, options, experiment_type,experiment_number):
     chain_1 = prompt_1 | llm
   
     # invoke
-    prompt_value_1 = handle_api_call(prompt_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options})
+    prompt_value_1 = handle_api_call(prompt_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question})
     chat_history.append(prompt_value_1)
     if prompt_value_1 is None:
         print("ERROR - Prompt 1: Failed to get a valid response")
@@ -108,7 +110,7 @@ def fw2(llm, case, question, options, experiment_type,experiment_number):
         return None, None, None, None,[None, None]
 
     start_time_1 = time.time()
-    response_1 = handle_api_call(chain_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question, "OPTIONS": options})
+    response_1 = handle_api_call(chain_1.invoke, {"CLINICAL_CASE": case, "QUESTION": question})
     chat_history.append(response_1)
     end_time_1 = time.time()
     running_time_1 = end_time_1 - start_time_1
