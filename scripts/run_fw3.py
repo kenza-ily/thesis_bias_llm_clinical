@@ -1,8 +1,9 @@
+print("Running the script")
 import sys
 import os
 from pathlib import Path
 import argparse
-from time import sleep 
+# from time import sleep 
 
 # Add the project root directory to the Python path
 project_root = Path(__file__).resolve().parent.parent
@@ -43,7 +44,7 @@ def main():
     # Set up the experiment parameters
     parser = argparse.ArgumentParser(description="Run experiments with LLMs")
     parser.add_argument("experiment_type", choices=["G", "GxE"], help="Type of experiment (G or GxE)")
-    parser.add_argument("experiment_number", type=int, choices=[2, 3, 4], help="Experiment number (2, 3, or 4)")
+    parser.add_argument("experiment_number", type=int, choices=[5], help="Experiment number (5)")
     parser.add_argument("experiment_name", help="Name of the experiment")
     parser.add_argument("llm_type", help="Type of LLM to use")
 
@@ -54,20 +55,18 @@ def main():
     experiment_name = args.experiment_name
     llm_type = args.llm_type
     
+    # LLMs import
     print("Imported llms:", llms)  # Debugging line
-    
     filtered_llms = {key: value for key, value in llms.items() if value.get('type') == llm_type}
     print("Filtered llms:", filtered_llms) 
     
-   
-    
-    print("Load Dataset")
     # Load the dataset
+    print("Load Dataset")
     try:
-        data_path = get_data_path(f"{experiment_type}_mini")
+        data_path = get_data_path(f"{experiment_type}")
         df = pd.read_csv(data_path)
         print(f"Loaded dataset with {len(df)} rows.")
-        sleep(5)
+        # sleep(5)
     except FileNotFoundError:
         print(f"Error: File not found at {data_path}")
         return

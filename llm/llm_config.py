@@ -20,11 +20,11 @@ from llm.models import (
 
 llms = {
     # ----- OpenAI models -----
-    "llm_gpt3": {
-        "model_name": "gpt3.5",
-        "model": get_gpt3_model(),
-        "type":'closed'
-    },
+    # "llm_gpt3": {
+    #     "model_name": "gpt3.5",
+    #     "model": get_gpt3_model(),
+    #     "type":'closed'
+    # },
     "llm_gpt4o": {
         "model_name": "gpt4o",
         "model": get_gpt4o_model(),
