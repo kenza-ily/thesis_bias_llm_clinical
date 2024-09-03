@@ -17,6 +17,7 @@ google-cloud-sdk/
 new_venv
 new_env
 new_env_2
+new_project_env
 gifted-*.json
 frameworks/testenv/
 .vscode/settings.json
