@@ -70,7 +70,7 @@ def store_results_in_df(df, idx, llm_name, results, experiment_type):
 
 # ====== FRAMEWORK
 
-def fw2(llm, case, question, options, experiment_type,experiment_number):
+def fw3(llm, case, question, experiment_type,experiment_number):
     # Debugging
     if llm is None:
         raise ValueError("LLM model is None. Please ensure a valid model is provided.")
@@ -155,11 +155,11 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_numbe
         futures = []
         for idx, row in df_llm.iterrows():
             future = executor.submit(
-                fw2,
+                fw3,
                 llm_model,
                 row['case'],
                 row['normalized_question'],
-                f"A. {row['opa_shuffled']}\nB. {row['opb_shuffled']}\nC. {row['opc_shuffled']}\nD. {row['opd_shuffled']}",
+                # f"A. {row['opa_shuffled']}\nB. {row['opb_shuffled']}\nC. {row['opc_shuffled']}\nD. {row['opd_shuffled']}",
                 experiment_type,
                 experiment_number
             )
@@ -189,14 +189,14 @@ def process_single_llm(llm_name, llm_data, df, experiment_type, experiment_numbe
 
 # ====== MAIN PIPELINE
 
-def process_llms_and_df_fw2(llms, df, experiment_type,repo_dir,experiment_number, experiment_name):
+def process_llms_and_df_fw3(llms, df, experiment_type,repo_dir,experiment_number, experiment_name):
     print(f"Starting experiment: #{experiment_number}, Experiment name: {experiment_name}")
     
     # ----------------- RESULTS DIRECTORY -----------------
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     # Saving folder
     def create_saving_folder(experiment_number):
-        saving_folder = os.path.join(repo_dir, "results", "fw2",f"exp{experiment_number}", f"{timestamp}_{experiment_name}")
+        saving_folder = os.path.join(repo_dir, "results", "fw3",f"exp{experiment_number}", f"{timestamp}_{experiment_name}")
         if not os.path.exists(saving_folder):
             os.makedirs(saving_folder)
         return saving_folder
