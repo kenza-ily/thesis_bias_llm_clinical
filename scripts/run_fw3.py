@@ -18,7 +18,7 @@ os.environ['AZURE_OPENAI_ENDPOINT'] = AZURE_OPENAI_ENDPOINT
 import pandas as pd
 from config.repo_dir import get_repo_dir
 from llm.llm_config import llms
-from frameworks.fw2 import process_llms_and_df_fw2
+from frameworks.fw3 import process_llms_and_df_fw3
 
 
 # --- 2/ Directories
@@ -39,7 +39,6 @@ def get_data_path(file_name):
 
 def main():
 
-    
     
     # Set up the experiment parameters
     parser = argparse.ArgumentParser(description="Run experiments with LLMs")
@@ -81,7 +80,7 @@ def main():
 
     # Run the experiment
     try:
-        results = process_llms_and_df_fw2(filtered_llms, df, experiment_type, repo_dir, experiment_number, experiment_name)
+        results = process_llms_and_df_fw3(filtered_llms, df, experiment_type, repo_dir, experiment_number, experiment_name)
         print("Experiment completed successfully.")
     except Exception as e:
         print(f"An error occurred during the experiment: {str(e)}")
