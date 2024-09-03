@@ -21,7 +21,7 @@ new_project_env
 gifted-*.json
 frameworks/testenv/
 .vscode/settings.json
-
+ollama.sif
 # --- 3/ Data
 # ----------- 3.1/ Raw data
 /data/new
