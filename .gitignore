@@ -76,3 +76,4 @@ results/fw2/exp2/error/closed/results_exp2_GxE_llm_sonnet3_5.csv
 data/ft/GxE_test.csv
 data/ft/GxE_train.csv
 /results/fw2/exp2/embed
+/results/fw3/exp5/old
