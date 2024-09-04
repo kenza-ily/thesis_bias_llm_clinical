@@ -81,3 +81,5 @@ data/ft/GxE_train.csv
 results/exp4/exp4_pp.csv
 results_raw/fw1/G/cleaned_results/llm_gpt4omini_embed.csv
 results_raw/fw1/G/cleaned_results/llm_gpt4turbo_embed.csv
+results_raw/fw1/G/cleaned_results/llm_gpt4o_embed.csv
+results_raw/fw1/G/cleaned_results/llm_gpt3_embed.csv
