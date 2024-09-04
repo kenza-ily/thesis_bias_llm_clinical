@@ -1,6 +1,5 @@
 #!/bin/bash
 #$ -l mem=32G
-#$ -l h_rt=72:00:00
 #$ -j y
 #$ -l gpu=2
 #$ -N KB_FW2_exp2_GxE
@@ -12,12 +11,19 @@
 module load python3/recommended
 module load apptainer
 
+# Set the path to the new virtual environment
+ENV_OLLAMA_PATH=/lustre/home/ucabkbe/bias_llm_clinical_nle/env_ollama
+
 cd /home/ucabkbe/bias_llm_clinical_nle/
-source new_env_2/bin/activate
 
 # Start Ollama using Apptainer
-export APPTAINER_BINDPATH=/scratch/scratch/$USER,/tmpdir
-apptainer shell ollama.sif <<EOF
+export APPTAINER_BINDPATH=/scratch/scratch/$USER,/tmpdir,$ENV_OLLAMA_PATH:$ENV_OLLAMA_PATH
+apptainer exec --bind $ENV_OLLAMA_PATH:$ENV_OLLAMA_PATH ollama.sif bash <<EOF
+source $ENV_OLLAMA_PATH/bin/activate
+
+# Verify Python version
+python --version
+
 ollama serve > out 2>&1 &
 sleep 30
 
@@ -30,5 +36,5 @@ ollama pull gemma2:2b
 ollama pull gemma2
 
 # Run your Python script
-python scripts/run_exp2.py GxE 2 "test3_cluster" "open"
+python scripts/run_exp2.py GxE 2 "test5_cluster" "open"
 EOF
