@@ -79,3 +79,5 @@ data/ft/GxE_train.csv
 /results/fw2/exp2/embed
 /results/fw3/exp5/old
 results/exp4/exp4_pp.csv
+results_raw/fw1/G/cleaned_results/llm_gpt4omini_embed.csv
+results_raw/fw1/G/cleaned_results/llm_gpt4turbo_embed.csv
