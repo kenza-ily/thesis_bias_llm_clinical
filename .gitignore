@@ -83,3 +83,8 @@ results_raw/fw1/G/cleaned_results/llm_gpt4omini_embed.csv
 results_raw/fw1/G/cleaned_results/llm_gpt4turbo_embed.csv
 results_raw/fw1/G/cleaned_results/llm_gpt4o_embed.csv
 results_raw/fw1/G/cleaned_results/llm_gpt3_embed.csv
+results_raw/fw1/GxE/cleaned_results/all_othercolumns_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt3_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt4o_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt4omini_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt4turbo_embed.csv
