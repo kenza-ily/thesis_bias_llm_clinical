@@ -18,6 +18,9 @@ new_venv
 new_env
 new_env_2
 new_project_env
+env_ollama_new_copy
+env_ollama_new
+env_ollama
 env_prompt5
 gifted-*.json
 frameworks/testenv/
@@ -78,3 +81,4 @@ data/ft/GxE_test.csv
 data/ft/GxE_train.csv
 /results/fw2/exp2/embed
 /results/fw3/exp5/old
+test_ollama_env_2.o121394
