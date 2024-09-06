@@ -13,7 +13,9 @@ from llm.models import (
     get_gemma2_9b,
     get_haiku,
     get_sonnet3_5,
-    get_gemini_3_5_flash
+    get_gemini_3_5_flash,
+    get_nvidia_llama3_1_403b,
+    get_nvidia_llama3_70b,
 )
 
 # ---- 2/ LLM definition ----
@@ -101,5 +103,16 @@ llms = {
         "model_name": "gemma-2-9b",
         "model": get_gemma2_9b(),
         "type":'open'
-    }
+    },
+    # === NVIDIA
+    "llm_nvidia_llama3.1_403b": {
+        "model_name": "llama3.1-403b",
+        "model": get_nvidia_llama3_1_403b(),
+        "type":'nvidia',
+    },
+    "llm_nvidia_llama3.70b": {
+        "model_name": "llama3-70b",
+        "model": get_nvidia_llama3_70b(),
+        "type":'nvidia',
+    },
 }
