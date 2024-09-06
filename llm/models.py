@@ -6,6 +6,7 @@ from config.settings import AZURE_OPENAI_API_VERSION, AZURE_OPENAI_CHAT_DEPLOYME
 from config.settings import AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4o
 # from config.settings import AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4omini
 from config.settings import AZURE_OPENAI_CHAT_DEPLOYMENT_NAME_GPT4turbo
+
 # -------
 
 def get_gpt3_model():
@@ -122,7 +123,22 @@ def get_gemini_3_5_flash():
 #     return load_cohere_model
 
 
+
+
+
 # ==========================
 # =================================================
-#               FINE TUNED MODELS
+#               NVIDIA MODELS
 # =================================================
+from config.settings import NVIDIA_API_KEY
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
+
+def load_nvidia_model(name):
+    return ChatNVIDIA(model=name, api_key=NVIDIA_API_KEY , temperature=TEMPERATURE)
+
+# --
+def get_nvidia_llama3.1_403b():
+    return load_nvidia_model("meta / llama-3.1-405b-instruct")
+
+def get_nvidia_llama3_70b():
+    return load_nvidia_model("meta / llama3-70b-instruct")
