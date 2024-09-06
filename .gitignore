@@ -4,9 +4,9 @@
 # --- 1/ Security
 new_env
 llm/keys.env
-.env
+*.env
 test_config.py
-
+.env
 # --- 2/ Cleaning
 .DS_Store
 .venv
@@ -20,6 +20,7 @@ new_env_2
 new_project_env
 env_ollama_new_copy
 env_ollama_new
+results_raw/
 env_ollama
 env_prompt5
 gifted-*.json
@@ -82,3 +83,20 @@ data/ft/GxE_train.csv
 /results/fw2/exp2/embed
 /results/fw3/exp5/old
 test_ollama_env_2.o121394
+results/exp4/exp4_pp.csv
+results_raw/fw1/G/cleaned_results/llm_gpt4omini_embed.csv
+results_raw/fw1/G/cleaned_results/llm_gpt4turbo_embed.csv
+results_raw/fw1/G/cleaned_results/llm_gpt4o_embed.csv
+results_raw/fw1/G/cleaned_results/llm_gpt3_embed.csv
+results_raw/fw1/GxE/cleaned_results/all_othercolumns_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt3_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt4o_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt4omini_embed.csv
+results_raw/fw1/GxE/cleaned_results/llm_gpt4turbo_embed.csv
+/results_raw/fw2/exp2/old
+/results_raw/fw2/exp2/embed
+/results_raw/fw3/exp5/20240903_122535_exp5_minitest
+/results_raw/fw2/exp4/20240831_211125_exp4_final
+/results_raw/fw2/exp4/20240831_211005_exp4_final
+/results_raw/fw3/exp5/20240903_130246_exp5_full
+results_raw/fw3/exp5/old/results_exp5_GxE_llm_gpt4o.csv
