@@ -14,6 +14,7 @@ module load apptainer
 # Set the path to the new virtual environment
 ENV_OLLAMA_PATH=/lustre/home/ucabkbe/bias_llm_clinical_nle/env_ollama
 
+
 cd /home/ucabkbe/bias_llm_clinical_nle/
 
 # Start Ollama using Apptainer
