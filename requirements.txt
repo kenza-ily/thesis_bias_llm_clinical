@@ -24,7 +24,7 @@ langchain-huggingface
 openai
 anthropic[vertex]
 langchain-google-vertexai
-
+langchain_nvidia_ai_endpoints
 
 # Ollama
 langchain_ollama
