@@ -4,9 +4,9 @@
 # --- 1/ Security
 new_env
 llm/keys.env
-.env
+*.env
 test_config.py
-
+.env
 # --- 2/ Cleaning
 .DS_Store
 .venv
