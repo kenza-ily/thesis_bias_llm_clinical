@@ -33,6 +33,32 @@ z_myriad_outputs/
 
 # --- 6/ Experiments ---
 /xai/
+.vscode/settings.json
+*.pyc
+**/__pycache__/**
+
+# --- 3/ Virtual Environments ---
+.venv
+*env*/
+ollama.sif
+
+# --- 4/ External Tools ---
+google-cloud-cli-linux-x86_64.tar.gz
+google-cloud-sdk/
+
+# --- 5/ Data ---
+# Raw data
+/data/new/
+/data/old/
+/data/ft/
+# Results data
+/results*/
+/results_analysis/
+z_myriad_outputs/
+*_test/
+
+# --- 6/ Experiments ---
+/xai/
 datasets/mededu_v9i1e47532_app1.docx
 llm/test.ipynb
 
