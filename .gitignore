@@ -40,7 +40,11 @@ llm/test.ipynb
 *.pyc
 gifted-*.json
 
-# --- 8/ Specific Files and Folders ---
+# --- 8/ Postprocessing and data ---
+*.csv
+*.ipynb
+
+# --- 9/ Specific Files and Folders ---
 frameworks/testenv/
 test_ollama_env_2.o121394
 /results
