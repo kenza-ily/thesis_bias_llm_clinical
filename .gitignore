@@ -1,103 +1,54 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
-
-# --- 1/ Security
-new_env
-llm/keys.env
+# --- 1/ Security ---
 *.env
+llm/keys.env
 test_config.py
-.env
-# --- 2/ Cleaning
+
+# --- 2/ System and IDE ---
 .DS_Store
-.venv
-google-cloud-cli-linux-x86_64.tar.gz
-google-cloud-sdk/
+.vscode/settings.json
 *.pyc
 **/__pycache__/**
-new_venv
-new_env
-new_env_2
-new_project_env
-env_ollama_new_copy
-env_ollama_new
-results_raw/
-env_ollama
-env_prompt5
-gifted-*.json
-frameworks/testenv/
-.vscode/settings.json
+
+# --- 3/ Virtual Environments ---
+.venv
+*env*/
 ollama.sif
 
-env_ollama
-# --- 3/ Data
-# ----------- 3.1/ Raw data
-/data/new
-/data/old
-results/fw2/exp2/old
-results/data/ft
-# /results/*
-/results_analysis/*
-data/ft
-z_myriad_outputs
-# ----------- 3.2/ Results data
-/results/fw1/gender/old
-/results/fw1/genderxethnicity/cleaned_results
-/results/fw1/gender/cleaned_results
-/results/fw1/genderxethnicity/old
-/results/fw2/old
-/results/experiment2/old
-results/old
-results/fw2/analysis.ipynb
-*_test/
-results/tests
-results/tests
+# --- 4/ External Tools ---
+google-cloud-cli-linux-x86_64.tar.gz
+google-cloud-sdk/
 
-# --- 4/ Experiments
-/xai/embed/progress
-/xai/embed/old
-/xai/saliency-learning
+# --- 5/ Data ---
+# Raw data
+/data/new/
+/data/old/
+/data/ft/
+# Results data
+/results*/
+/results_analysis/
+z_myriad_outputs/
+*_test/
+
+# --- 6/ Experiments ---
+/xai/
 datasets/mededu_v9i1e47532_app1.docx
 llm/test.ipynb
-xai/embed/extract.ipynb
 
-xai/embed/extract_embed.ipynb
-results/fw2/results.ipynb
-/results_analysis
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_gemma2_9b.csv
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_llama3_1_8b.csv
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_llama3_8b.csv
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_llama3_70b.csv
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_llm_gemma2_2b.csv
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_mistral_7b.csv
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_mixtral_8x22b.csv
-results/fw2/exp2/error/20240816_165437_test0_cluster/results_exp2_GxE_llm_mixtral_nemo.csv
-results/fw2/exp2/error/closed/check.ipynb
-results/fw2/exp2/error/closed/results_exp2_GxE_llm_gemini_3_5_flash.csv
-results/fw2/exp2/error/closed/results_exp2_GxE_llm_gpt3.csv
-results/fw2/exp2/error/closed/results_exp2_GxE_llm_gpt4o.csv
-results/fw2/exp2/error/closed/results_exp2_GxE_llm_gpt4turbo.csv
-results/fw2/exp2/error/closed/results_exp2_GxE_llm_haiku.csv
-results/fw2/exp2/error/closed/results_exp2_GxE_llm_sonnet3_5.csv
-/xai
-data/ft/GxE_test.csv
-data/ft/GxE_train.csv
-/results/fw2/exp2/embed
-/results/fw3/exp5/old
+# --- 7/ Temporary and Cache Files ---
+*.pyc
+gifted-*.json
+
+# --- 8/ Postprocessing and data ---
+*.csv
+*.ipynb
+
+# --- 9/ Specific Files and Folders ---
+frameworks/testenv/
 test_ollama_env_2.o121394
-results/exp4/exp4_pp.csv
-results_raw/fw1/G/cleaned_results/llm_gpt4omini_embed.csv
-results_raw/fw1/G/cleaned_results/llm_gpt4turbo_embed.csv
-results_raw/fw1/G/cleaned_results/llm_gpt4o_embed.csv
-results_raw/fw1/G/cleaned_results/llm_gpt3_embed.csv
-results_raw/fw1/GxE/cleaned_results/all_othercolumns_embed.csv
-results_raw/fw1/GxE/cleaned_results/llm_gpt3_embed.csv
-results_raw/fw1/GxE/cleaned_results/llm_gpt4o_embed.csv
-results_raw/fw1/GxE/cleaned_results/llm_gpt4omini_embed.csv
-results_raw/fw1/GxE/cleaned_results/llm_gpt4turbo_embed.csv
-/results_raw/fw2/exp2/old
-/results_raw/fw2/exp2/embed
-/results_raw/fw3/exp5/20240903_122535_exp5_minitest
-/results_raw/fw2/exp4/20240831_211125_exp4_final
-/results_raw/fw2/exp4/20240831_211005_exp4_final
-/results_raw/fw3/exp5/20240903_130246_exp5_full
-results_raw/fw3/exp5/old/results_exp5_GxE_llm_gpt4o.csv
+/results
+results/exp2/exp2_pp_nollm.csv
+results/exp2/exp2_pp_nollm.csv
+/results
+/.git-rewrite
