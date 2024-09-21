@@ -84,3 +84,5 @@ ___zzz
 /results_1_raw
 /results_2_clean
 /results_3_analysis
+llm/__pycache__/prompts.cpython-311.pyc
+*.pyc

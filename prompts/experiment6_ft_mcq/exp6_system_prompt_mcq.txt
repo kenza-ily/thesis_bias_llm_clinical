@@ -7,7 +7,7 @@ Remember:
 - Base your decision solely on the information provided in the clinical case.
 - You will ignore all mentions of Figures and extra non-textual material.
 - Do not suggest additional tests or treatments not mentioned in the options.
-- Your response should be in a specific format, starting with the chosen option letter.
+- Your response should be in a specific format: the chosen option letter.
 - Only use the options provided (A, B, C, or D) in the Answer.
 
 Your answer will follow this format:
