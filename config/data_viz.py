@@ -12,7 +12,7 @@ closed_llms = ['gpt3', 'gpt4o', 'gpt4turbo', 'haiku', 'sonnet3_5', 'gemini_3_5_f
 open_llms = ['nvidia_llama3_1_403b', 'nvidia_llama3.70b']
 llms_ft = ['gpt4omini_bsl','gpt4omini_ft','gpt4omini_ft2']
 llms_exp0 = ['gpt3']
-llms_exp1 = ['gpt3', 'gpt4omini', 'gpt4o', 'gpt4turbo']
+llms_exp1 = ['gpt3', 'gpt4o', 'gpt4turbo']
 
 # Colors
 colors_llms = {
@@ -29,11 +29,16 @@ colors_llms = {
     'nvidia_llama3.70b': '#0081FB',
     'nvidia_llama3_1_403b': '#0064e0',
     # Fine tuned
-    'gpt4omini_bsl': '#FF00FF',
-    'gpt4omini_ft': '#C500C5',
-    'gpt4omini_ft2': '#830083',
-    # WTF
-    'gpt4omini': '#F10000'}
+    'gpt4omini_mcq_bsl': '#FF00FF',
+    'gpt4omini_mcq_ft': '#C500C5',
+    'gpt4omini_xpl_bsl': '#B161FD',
+    'gpt4omini_xpl_ft': '#2A044EFF',
+    # JALLaMA
+    'jallama_mcq_bsl': '#D71635',
+    'jallama_mcq_ft': '#8B0018',
+    'jallama_xpl_bsl': '#F9E67A',
+    'jallama_xpl_ft': '#CDA000'
+    }
 
 colors_gender = {
     'male': '#3344FF',
@@ -141,17 +146,56 @@ names_llms = {
     'nvidia_llama3.70b': 'Llama 3.70b',
     'nvidia_llama3_1_403b': 'Llama 3.1.403b',
     # Fine tuned
-    'gpt4omini_bsl': 'GPT-4o Mini | BSL',
-    'gpt4omini_ft': 'GPT-4o Mini | FT v1',
-    'gpt4omini_ft2': 'GPT-4o Mini | FT v2'
+    'gpt4omini_mcq_bsl': 'GPT MCQ | BSL',
+    'gpt4omini_mcq_ft': 'GPT MCQ | FT',
+    'gpt4omini_xpl_bsl': 'GPT XPL | BSL',
+    'gpt4omini_xpl_ft': 'GPT XPL | FT',
+    # JALLaMA
+    'jallama_mcq_bsl': 'Llama MCQ | BSL',
+    'jallama_mcq_ft': 'Llama MCQ | FT',
+    'jallama_xpl_bsl': 'Llama XPL | BSL',
+    'jallama_xpl_ft': 'Llama XPL | FT'
 }
+colors_llms = {
+    # GPTs
+    'gpt3': '#57A981', 
+    'gpt4o': '#51DA4C', 
+    'gpt4turbo': '#2D712A', 
+    # Claude
+    'haiku': '#D5A480', 
+    'sonnet3_5': '#C97C5C', 
+    # Gemini
+    'gemini_3_5_flash': '#8479C7',
+    # Llama
+    'nvidia_llama3.70b': '#0081FB',
+    'nvidia_llama3_1_403b': '#0064e0',
+    # Fine tuned
+    'gpt4omini_mcq_bsl': '#FF00FF',
+    'gpt4omini_mcq_ft': '#C500C5',
+    'gpt4omini_xpl_bsl': '#B161FD',
+    'gpt4omini_xpl_ft': '#8A2BE2',
+    # JALLaMA
+    'jallama_mcq_bsl': '#D71635',
+    'jallama_mcq_ft': '#8B0018',
+    'jallama_xpl_bsl': '#F9E67A',
+    'jallama_xpl_ft': '#CDA000'
+    }
+
+
 
 names_experiments= {
-    'fw0_exp0': 'Experiment 0',
-    'fw1_exp1': 'Experiment 1',
-    'fw2_exp2': 'P2 - Experiment 2',
-    'fw2_exp3': 'P2 - Experiment 3',
-    'fw2_exp4': 'P2 - Experiment 4',
-    'fw3_exp5': 'P3 - No Label',
-    'fw4_ft': 'Fine-tuning'
+    'fw0_exp0': 'Exp0',
+    'fw1_exp1_G': 'Exp1.G',
+    'fw1_exp1_G': 'Exp1.GxE',
+    'fw2_exp2': 'Exp2.Prompt2',
+    'fw2_exp3': 'Exp2.Prompt3',
+    'fw2_exp4': 'Exp2.Prompt4',
+    'gpt4omini_mcq_bsl': 'MCQ | GPT BSL',
+    'gpt4omini_mcq_ft': 'MCQ | GPT FT',
+    'gpt4omini_xpl_bsl': 'XPL | GPT BSL',
+    'gpt4omini_xpl_ft': 'XPL | GPT FT',
+    'jallama_mcq_bsl': 'MCQ | LLama BSL',
+    'jallama_mcq_ft': 'MCQ | LLama FT',
+    'jallama_xpl_bsl': 'XPL | LLama BSL',
+    'jallama_xpl_ft': 'XPL | LLama FT',
 }
