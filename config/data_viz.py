@@ -36,6 +36,8 @@ colors_llms = {
     # JALLaMA
     'jallama_mcq_bsl': '#D71635',
     'jallama_mcq_ft': '#8B0018',
+    'jallama_medqa_bsl': '#F9E67A',
+    'jallama_medqa_ft': '#CDA000',
     'jallama_xpl_bsl': '#F9E67A',
     'jallama_xpl_ft': '#CDA000'
     }
