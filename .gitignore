@@ -31,6 +31,8 @@ google-cloud-sdk/
 z_myriad_outputs/
 *_test/
 
+notebooks/ignore/
+
 # --- 6/ Experiments ---
 /xai/
 .vscode/settings.json
