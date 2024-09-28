@@ -30,7 +30,7 @@ google-cloud-sdk/
 /results_analysis/
 z_myriad_outputs/
 *_test/
-
+analysis/
 notebooks/ignore/
 
 # --- 6/ Experiments ---
