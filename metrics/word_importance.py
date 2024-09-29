@@ -1,6 +1,9 @@
 from collections import Counter
 import torch
 
+
+
+
 def calculate_word_importance(text, model, tokenizer):
     # Tokenize and get model output
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
@@ -32,3 +35,8 @@ def calculate_word_importance(text, model, tokenizer):
     word_importance = [(token, imp) for token, imp in word_importance if token not in ('[CLS]', '[SEP]', '[PAD]')]
     
     return word_importance
+
+
+def get_word_importance_dict(text, model, tokenizer):
+    word_importance = calculate_word_importance(text, model, tokenizer)
+    return {word: importance for word, importance in word_importance}
