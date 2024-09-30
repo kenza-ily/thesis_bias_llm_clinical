@@ -158,31 +158,6 @@ names_llms = {
     'jallama_xpl_bsl': 'Llama XPL | BSL',
     'jallama_xpl_ft': 'Llama XPL | FT'
 }
-colors_llms = {
-    # GPTs
-    'gpt3': '#57A981', 
-    'gpt4o': '#51DA4C', 
-    'gpt4turbo': '#2D712A', 
-    # Claude
-    'haiku': '#D5A480', 
-    'sonnet3_5': '#C97C5C', 
-    # Gemini
-    'gemini_3_5_flash': '#8479C7',
-    # Llama
-    'nvidia_llama3.70b': '#0081FB',
-    'nvidia_llama3_1_403b': '#0064e0',
-    # Fine tuned
-    'gpt4omini_mcq_bsl': '#FF00FF',
-    'gpt4omini_mcq_ft': '#C500C5',
-    'gpt4omini_xpl_bsl': '#B161FD',
-    'gpt4omini_xpl_ft': '#8A2BE2',
-    # JALLaMA
-    'jallama_mcq_bsl': '#D71635',
-    'jallama_mcq_ft': '#8B0018',
-    'jallama_xpl_bsl': '#F9E67A',
-    'jallama_xpl_ft': '#CDA000'
-    }
-
 
 
 names_experiments= {
