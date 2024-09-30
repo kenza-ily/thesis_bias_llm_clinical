@@ -11,6 +11,8 @@ from wordcloud import WordCloud
 closed_llms = ['gpt3', 'gpt4o', 'gpt4turbo', 'haiku', 'sonnet3_5', 'gemini_3_5_flash']
 open_llms = ['nvidia_llama3_1_403b', 'nvidia_llama3.70b']
 llms_ft = ['gpt4omini_bsl','gpt4omini_ft','gpt4omini_ft2']
+llms_ft_mcq=['gpt_bsl','gpt_ft','jallama_bsl','jallama_ft']
+llms_ft_xpl=['gpt4omini_ft3_xpl','gpt4omini_ft3_xpl_bsl','jallama_xpl_bsl','jallama_xpl_ft']
 llms_exp0 = ['gpt3']
 llms_exp1 = ['gpt3', 'gpt4o', 'gpt4turbo']
 
@@ -29,17 +31,19 @@ colors_llms = {
     'nvidia_llama3.70b': '#0081FB',
     'nvidia_llama3_1_403b': '#0064e0',
     # Fine tuned
-    'gpt4omini_mcq_bsl': '#FF00FF',
-    'gpt4omini_mcq_ft': '#C500C5',
-    'gpt4omini_xpl_bsl': '#B161FD',
-    'gpt4omini_xpl_ft': '#2A044EFF',
+    # GPT
+    'gpt_bsl_mcq': '#FF00FF',
+    'gpt_ft_mcq': '#C500C5',
+    'gpt_bsl_xpl': '#B161FD',
+    'gpt_ft_xpl': '#2A044EFF',
     # JALLaMA
-    'jallama_mcq_bsl': '#D71635',
-    'jallama_mcq_ft': '#8B0018',
-    'jallama_medqa_bsl': '#F9E67A',
-    'jallama_medqa_ft': '#CDA000',
-    'jallama_xpl_bsl': '#F9E67A',
-    'jallama_xpl_ft': '#CDA000'
+    'jallama_bsl_mcq': '#D7F9E6',
+    'jallama_ft_mcq': '#CDA000',
+    'jallama_bsl_medqa': '#F9E67A',
+    'jallama_ft_medqa': '#CDA000',
+    'jallama_bsl_xpl': '#D71635',
+    'jallama_ft_xpl': '#8B0018'
+
     }
 
 colors_gender = {
@@ -148,15 +152,15 @@ names_llms = {
     'nvidia_llama3.70b': 'Llama 3.70b',
     'nvidia_llama3_1_403b': 'Llama 3.1.403b',
     # Fine tuned
-    'gpt4omini_mcq_bsl': 'GPT MCQ | BSL',
-    'gpt4omini_mcq_ft': 'GPT MCQ | FT',
-    'gpt4omini_xpl_bsl': 'GPT XPL | BSL',
-    'gpt4omini_xpl_ft': 'GPT XPL | FT',
+    'gpt_bsl_mcq': 'GPT MCQ | BSL',
+    'gpt_ft_mcq': 'GPT MCQ | FT',
+    'gpt_bsl_xpl': 'GPT XPL | BSL',
+    'gpt_ft_xpl': 'GPT XPL | FT',
     # JALLaMA
-    'jallama_mcq_bsl': 'Llama MCQ | BSL',
-    'jallama_mcq_ft': 'Llama MCQ | FT',
-    'jallama_xpl_bsl': 'Llama XPL | BSL',
-    'jallama_xpl_ft': 'Llama XPL | FT'
+    'jallama_bsl_mcq': 'Llama MCQ | BSL',
+    'jallama_ft_mcq': 'Llama MCQ | FT',
+    'jallama_bsl_xpl': 'Llama XPL | BSL',
+    'jallama_ft_xpl': 'Llama XPL | FT'
 }
 
 
@@ -167,12 +171,12 @@ names_experiments= {
     'fw2_exp2': 'Exp2.Prompt2',
     'fw2_exp3': 'Exp2.Prompt3',
     'fw2_exp4': 'Exp2.Prompt4',
-    'gpt4omini_mcq_bsl': 'MCQ | GPT BSL',
-    'gpt4omini_mcq_ft': 'MCQ | GPT FT',
-    'gpt4omini_xpl_bsl': 'XPL | GPT BSL',
-    'gpt4omini_xpl_ft': 'XPL | GPT FT',
-    'jallama_mcq_bsl': 'MCQ | LLama BSL',
-    'jallama_mcq_ft': 'MCQ | LLama FT',
-    'jallama_xpl_bsl': 'XPL | LLama BSL',
-    'jallama_xpl_ft': 'XPL | LLama FT',
+    'gpt_bsl_mcq': 'Exp3 GPT MCQ | BSL',
+    'gpt_ft_mcq': 'Exp3 GPT MCQ | FT',
+    'gpt_bsl_xpl': 'Exp3 GPT XPL | BSL',
+    'gpt_ft_xpl': 'FExp3T GPT XPL | FT',
+    'jallama_bsl_mcq': 'Exp3 Llama MCQ | BSL',
+    'jallama_ft_mcq': 'Exp3 Llama MCQ | FT',
+    'jallama_bsl_xpl': 'Exp3 Llama XPL | BSL',
+    'jallama_ft_xpl': 'Exp3 Llama XPL | FT'
 }
