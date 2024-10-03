@@ -88,3 +88,4 @@ ___zzz
 /results_3_analysis
 llm/__pycache__/prompts.cpython-311.pyc
 *.pyc
+*.png

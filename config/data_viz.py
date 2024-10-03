@@ -43,7 +43,6 @@ colors_llms = {
     'jallama_ft_medqa': '#CDA000',
     'jallama_bsl_xpl': '#D71635',
     'jallama_ft_xpl': '#8B0018'
-
     }
 
 colors_gender = {
@@ -97,6 +96,10 @@ colors_performance = {
     0: '#FF000084'
 }
 
+colors_gender= {'male': '#90D5DD',
+                'female': '#EC6D72',
+                'neutral': '#56E11F79'}
+
 # Graph Parameters
 cmap_personalised = "YlOrRd"
 figure_size = (10, 6)
@@ -120,7 +123,7 @@ order_version_gender_ethnicity = [f"{gender}_{version}_{ethnicity}" for gender i
 
 def plot_llm_colors():
     fig, ax = plt.subplots(figsize=(8, 2))
-    spacing = 1.2  # Adding 0.2 cm space between each color
+    spacing = 3  # Adding 0.2 cm space between each color
     
     for i, (key, color) in enumerate(colors_llms.items()):
         ax.add_patch(plt.Rectangle((i * spacing, 0), 1, 1, color=color))  # Adjust position by spacing
