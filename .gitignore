@@ -15,7 +15,7 @@ test_config.py
 .venv
 *env*/
 ollama.sif
-
+data/
 # --- 4/ External Tools ---
 google-cloud-cli-linux-x86_64.tar.gz
 google-cloud-sdk/
