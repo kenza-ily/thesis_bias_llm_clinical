@@ -8,6 +8,9 @@ This repository contains the code and data for my Master's Thesis for **MSc AI f
 2. Exploring mitigation strategies with prompting and fine-tuning for bias mitigation in clinical LLMs.
 3. Evaluating LLM performance on complex, real-world clinical cases using the [JAMA Network Clinical Challenge archive](https://jamanetwork.com/collections/44038/clinical-challenge)
 
+
+This thesis let to the paper _How Can We Diagnose and Treat Bias in Large Language Models for Clinical Decision-Making?_ [available on arxiv](https://arxiv.org/abs/2410.16574).
+
 This research builds upon the UNESCO 2024 Report on Gender Bias in LLM and aims to develop a comprehensive and rigorous framework for mitigating bias in clinical LLMs, ultimately promoting fairness and reducing the potential for discriminatory outputs in healthcare AI applications.
 
 ---
